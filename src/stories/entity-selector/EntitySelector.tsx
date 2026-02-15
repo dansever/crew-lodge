@@ -14,7 +14,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Check, ChevronsUpDown, LucideIcon, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -114,6 +113,7 @@ export function EntitySelector<T>({
 
   return (
     <Popover
+      modal // Required for mouse wheel scroll in CommandList (Radix+cmdk interaction)
       open={open}
       onOpenChange={o => {
         setOpen(o);
@@ -152,71 +152,67 @@ export function EntitySelector<T>({
           <Command>
             <CommandInput placeholder={messages.search} />
             <CommandList>
-              <ScrollArea className="h-[300px]">
-                <CommandEmpty>{messages.empty}</CommandEmpty>
-                <CommandGroup>
-                  {items.map(item => {
-                    const itemValue = getValue(item);
-                    return (
-                      <CommandItem
-                        key={itemValue}
-                        value={buildSearchValue(item)}
-                        onSelect={() => {
-                          onChange?.(itemValue);
-                          setOpen(false);
-                        }}
-                        className="flex items-center gap-3"
-                      >
-                        <Check
-                          className={cn(
-                            'h-4 w-4 shrink-0',
-                            value === itemValue ? 'opacity-100' : 'opacity-0'
-                          )}
-                        />
-                        {showValueBadge && (
-                          <span className="rounded bg-muted px-1.5 py-0.5 text-xs font-semibold tracking-wider text-foreground">
-                            {getDisplayBadge(item)}
+              <CommandEmpty>{messages.empty}</CommandEmpty>
+              <CommandGroup>
+                {items.map(item => {
+                  const itemValue = getValue(item);
+                  return (
+                    <CommandItem
+                      key={itemValue}
+                      value={buildSearchValue(item)}
+                      onSelect={() => {
+                        onChange?.(itemValue);
+                        setOpen(false);
+                      }}
+                      className="flex items-center gap-3"
+                    >
+                      <Check
+                        className={cn(
+                          'h-4 w-4 shrink-0',
+                          value === itemValue ? 'opacity-100' : 'opacity-0'
+                        )}
+                      />
+                      {showValueBadge && (
+                        <span className="rounded bg-muted px-1.5 py-0.5 text-xs font-semibold tracking-wider text-foreground">
+                          {getDisplayBadge(item)}
+                        </span>
+                      )}
+                      <div className="flex flex-col min-w-0">
+                        <span className="truncate text-sm">
+                          {getPrimaryLabel(item)}
+                        </span>
+                        {getSecondaryLabel && (
+                          <span className="text-xs text-muted-foreground">
+                            {getSecondaryLabel(item)}
                           </span>
                         )}
-                        <div className="flex flex-col min-w-0">
-                          <span className="truncate text-sm">
-                            {getPrimaryLabel(item)}
-                          </span>
-                          {getSecondaryLabel && (
-                            <span className="text-xs text-muted-foreground">
-                              {getSecondaryLabel(item)}
-                            </span>
-                          )}
-                        </div>
-                      </CommandItem>
-                    );
-                  })}
-                </CommandGroup>
-                {addConfig && (
-                  <>
-                    <CommandSeparator />
-                    <CommandGroup>
-                      <CommandItem
-                        onSelect={() => setIsAdding(true)}
-                        className="flex items-center gap-2 text-primary"
-                      >
-                        <Plus className="h-4 w-4" />
-                        <span className="font-medium">
-                          {addConfig.label ?? 'Add new'}
-                        </span>
-                      </CommandItem>
-                    </CommandGroup>
-                  </>
-                )}
-              </ScrollArea>
+                      </div>
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+              {addConfig && (
+                <>
+                  <CommandSeparator />
+                  <CommandGroup>
+                    <CommandItem
+                      onSelect={() => setIsAdding(true)}
+                      className="flex items-center gap-2 text-primary"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span className="font-medium">
+                        {addConfig.label ?? 'Add new'}
+                      </span>
+                    </CommandItem>
+                  </CommandGroup>
+                </>
+              )}
             </CommandList>
           </Command>
         ) : (
           <div className="p-4 space-y-3">
             <div className="flex items-center gap-2 mb-1">
-              {AddFormIcon && (
-                <AddFormIcon className="h-4 w-4 text-primary" />
-              )}
+              {AddFormIcon && <AddFormIcon className="h-4 w-4 text-primary" />}
               <h4 className="text-sm font-semibold text-foreground">
                 {addConfig?.title ?? 'New'}
               </h4>

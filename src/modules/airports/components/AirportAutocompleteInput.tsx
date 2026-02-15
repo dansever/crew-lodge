@@ -98,7 +98,7 @@ function AirportAutocompleteInput({
     }
 
     // Otherwise, filter based on query
-    const normalizedQuery = debouncedQuery.toLowerCase().trim();
+    const normalizedQuery = debouncedQuery[0].toLowerCase().trim();
     const filtered = normalizedAirports.filter(airport => {
       const searchableText =
         `${airport.name} ${airport.iata} ${airport.icao} ${airport.city} ${airport.state} ${airport.country}`.toLowerCase();

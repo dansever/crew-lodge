@@ -60,6 +60,13 @@ Guidelines:
   - Domain functions live in `convex/functions/<domain>.ts`.
   - Use `query` for reads and `mutation` for writes.
   - Internal auth/org helpers stay in dedicated modules (`auth.ts`, `orgs.ts`).
+- **Aggregates** (`convex/functions/aggregates/`):
+  - Page-specific queries that read from **multiple tables** and return a joined/computed payload.
+  - Use for `preloadQuery` in `page.tsx` so the client gets one payload instead of many domain queries.
+  - Naming: `get<PageName>PageData` or `getDashboard`; file name matches the page (e.g. `crewMembersPage.ts`, `dashboard.ts`).
+  - **Queries only** — no mutations; aggregates are for reads.
+  - Export a typed payload (e.g. `DashboardData`, `CrewMembersPageData`) alongside the query.
+- **Domain vs aggregate**: Domain functions (`crewMembers.ts`, `disruptions.ts`) handle single-table CRUD and entity-level reads/writes. Aggregates combine cross-table data for a specific route; keep domain logic in domain files and compose it in aggregates.
 
 Data/authorization rules:
 

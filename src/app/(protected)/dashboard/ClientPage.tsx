@@ -171,7 +171,9 @@ export default function DashboardClientPage() {
                 className="rounded-lg border border-border/60 bg-card/50 p-4 transition-colors hover:border-border"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">{s.label}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {s.label}
+                  </span>
                   <s.icon className="h-4 w-4 text-muted-foreground/70" />
                 </div>
                 <p className="mt-2 text-xl font-semibold tracking-tight text-foreground">
@@ -203,12 +205,18 @@ export default function DashboardClientPage() {
                     onClick={() => router.push('/bookings')}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-foreground">{m.name}</span>
+                      <span className="font-medium text-foreground">
+                        {m.name}
+                      </span>
                       <ArrowRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">{m.country}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {m.country}
+                    </p>
                     <div className="mt-3 flex items-baseline justify-between text-xs">
-                      <span className="text-muted-foreground">{m.activeBookings} active</span>
+                      <span className="text-muted-foreground">
+                        {m.activeBookings} active
+                      </span>
                       <span className="font-medium text-foreground">
                         ${m.todaySpend.toLocaleString()}
                       </span>
@@ -218,7 +226,9 @@ export default function DashboardClientPage() {
               </motion.div>
             ) : (
               <div className="rounded-lg border border-border/50 bg-muted/20 p-6 text-center">
-                <p className="text-sm text-muted-foreground">No markets configured</p>
+                <p className="text-sm text-muted-foreground">
+                  No markets configured
+                </p>
               </div>
             )}
           </section>
@@ -236,7 +246,9 @@ export default function DashboardClientPage() {
                   >
                     <CheckCircle2 className="h-4 w-4 shrink-0 text-muted-foreground/70 mt-0.5" />
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm text-foreground">{formatAction(a.action)}</p>
+                      <p className="text-sm text-foreground">
+                        {formatAction(a.action)}
+                      </p>
                       <p className="text-xs text-muted-foreground mt-0.5">
                         {formatTimeAgo(a.createdAt)}
                       </p>
@@ -245,7 +257,9 @@ export default function DashboardClientPage() {
                 ))
               ) : (
                 <div className="px-4 py-6 text-center">
-                  <p className="text-sm text-muted-foreground">No recent activity</p>
+                  <p className="text-sm text-muted-foreground">
+                    No recent activity
+                  </p>
                 </div>
               )}
             </div>

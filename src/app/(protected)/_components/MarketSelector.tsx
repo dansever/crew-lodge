@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/convex/_generated/api';
 import type { Market, MarketId } from '@/convex/types';
-import { AddAirportSheet } from '@/modules/airports';
+import { AddMarketSheet } from '@/modules/markets';
 import { Button, Input, Sheet } from '@/stories';
 import { useQuery } from 'convex/react';
 import { CheckCircle2, ChevronDown, MapPin, Plane, Plus } from 'lucide-react';
@@ -122,9 +122,7 @@ export default function MarketSelector({
           onChange={handleSearchChange}
         />
         <div className="flex justify-end">
-          <AddAirportSheet
-            trigger={<Button icon={Plus} text="Add Airport" />}
-          />
+          <AddMarketSheet trigger={<Button icon={Plus} text="Add Market" />} />
         </div>
       </div>
       <MarketsList
