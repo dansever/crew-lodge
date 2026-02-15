@@ -13,7 +13,7 @@ export default async function BookingsPage() {
 
   const token = (await getToken({ template: 'convex' })) ?? '';
   const preloadedBookings = await preloadQuery(
-    api.functions.bookings.getMyBookingsPage,
+    api.functions.bookings.listMyBookings,
     {},
     { token }
   );

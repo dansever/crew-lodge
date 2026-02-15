@@ -8,10 +8,11 @@
  * @module
  */
 
+import type * as functions_aggregates_dashboard from "../functions/aggregates/dashboard.js";
+import type * as functions_aggregates_disruptionsPage from "../functions/aggregates/disruptionsPage.js";
 import type * as functions_airports from "../functions/airports.js";
 import type * as functions_auth from "../functions/auth.js";
 import type * as functions_bookings from "../functions/bookings.js";
-import type * as functions_dashboard from "../functions/dashboard.js";
 import type * as functions_disruptions from "../functions/disruptions.js";
 import type * as functions_hotels from "../functions/hotels.js";
 import type * as functions_markets from "../functions/markets.js";
@@ -39,10 +40,11 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "functions/aggregates/dashboard": typeof functions_aggregates_dashboard;
+  "functions/aggregates/disruptionsPage": typeof functions_aggregates_disruptionsPage;
   "functions/airports": typeof functions_airports;
   "functions/auth": typeof functions_auth;
   "functions/bookings": typeof functions_bookings;
-  "functions/dashboard": typeof functions_dashboard;
   "functions/disruptions": typeof functions_disruptions;
   "functions/hotels": typeof functions_hotels;
   "functions/markets": typeof functions_markets;

@@ -89,7 +89,7 @@ export function Sheet({
           </SheetTitle>
           <SheetDescription>{description}</SheetDescription>
         </SheetHeader>
-        <ScrollArea className="px-4 min-h-0 flex-1 overflow-hidden ">
+        <ScrollArea className="px-4 py-2 min-h-0 flex-1 overflow-hidden ">
           {children}
         </ScrollArea>
         <Separator />

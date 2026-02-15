@@ -13,7 +13,7 @@ export default async function DisruptionsPage() {
 
   const token = (await getToken({ template: 'convex' })) ?? '';
   const preloadedData = await preloadQuery(
-    api.functions.disruptions.getDisruptionsPage,
+    api.functions.aggregates.disruptionsPage.getDisruptionsPageData,
     {},
     { token }
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import { api } from '@/convex/_generated/api';
-import type { DashboardData } from '@/convex/functions/dashboard';
+import type { DashboardData } from '@/convex/functions/aggregates/dashboard';
 import { Preloaded, usePreloadedQuery } from 'convex/react';
 import {
   createContext,
@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 
-export type PreloadedDashboard = Preloaded<typeof api.functions.dashboard.getDashboard>;
+export type PreloadedDashboard = Preloaded<typeof api.functions.aggregates.dashboard.getDashboard>;
 
 interface DashboardContextValue {
   /** Dashboard data; undefined when loading */

@@ -25,6 +25,7 @@ import {
   PromptInputTools,
   usePromptInputController,
 } from '@/components/ai-elements/prompt-input';
+import { cn } from '@/lib/utils';
 import { logger } from '@/utils/logger';
 import { InputProps } from '@copilotkit/react-ui';
 import { CheckIcon } from 'lucide-react';
@@ -72,7 +73,16 @@ const SubmitButton = ({ inProgress }: { inProgress: boolean }) => {
   );
 };
 
-const ChatMessageInput = ({ inProgress, onSend }: InputProps) => {
+interface ChatMessageInputProps extends InputProps {
+  modelSelector: boolean;
+  className?: string;
+}
+const ChatMessageInput = ({
+  inProgress,
+  onSend,
+  modelSelector = true,
+  className,
+}: ChatMessageInputProps) => {
   const [model, setModel] = useState<string>(models[0].id);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
 
@@ -99,76 +109,78 @@ const ChatMessageInput = ({ inProgress, onSend }: InputProps) => {
         globalDrop
         multiple
         onSubmit={handleSubmit}
-        className="px-4 pb-2"
+        className={cn(className)}
       >
         <PromptInputBody>
           <PromptInputTextarea className="bg-white dark:bg-gray-900" />
         </PromptInputBody>
         <PromptInputFooter className="bg-white dark:bg-gray-900">
           <PromptInputTools className="flex flex-row gap-2">
-            <ModelSelector
-              onOpenChange={setModelSelectorOpen}
-              open={modelSelectorOpen}
-            >
-              <ModelSelectorTrigger asChild>
-                <PromptInputButton>
-                  {selectedModelData?.chefSlug && (
-                    <ModelSelectorLogo
-                      provider={selectedModelData.chefSlug}
-                      className="size-5"
-                    />
-                  )}
-                  {selectedModelData?.name && (
-                    <ModelSelectorName>
-                      {selectedModelData.name}
-                    </ModelSelectorName>
-                  )}
-                </PromptInputButton>
-              </ModelSelectorTrigger>
-              <ModelSelectorContent>
-                <ModelSelectorInput placeholder="Search models..." />
-                <ModelSelectorList>
-                  <ModelSelectorEmpty>No models found.</ModelSelectorEmpty>
-                  {['OpenAI', 'Google'].map(chef => (
-                    <ModelSelectorGroup heading={chef} key={chef}>
-                      {models
-                        .filter(m => m.chef === chef)
-                        .map(m => (
-                          <ModelSelectorItem
-                            key={m.id}
-                            onSelect={() => {
-                              setModel(m.id);
-                              setModelSelectorOpen(false);
-                            }}
-                            value={m.id}
-                          >
-                            <ModelSelectorLogo
-                              provider={m.chefSlug}
-                              className="size-5"
-                            />
+            {modelSelector && (
+              <ModelSelector
+                onOpenChange={setModelSelectorOpen}
+                open={modelSelectorOpen}
+              >
+                <ModelSelectorTrigger asChild>
+                  <PromptInputButton>
+                    {selectedModelData?.chefSlug && (
+                      <ModelSelectorLogo
+                        provider={selectedModelData.chefSlug}
+                        className="size-5"
+                      />
+                    )}
+                    {selectedModelData?.name && (
+                      <ModelSelectorName>
+                        {selectedModelData.name}
+                      </ModelSelectorName>
+                    )}
+                  </PromptInputButton>
+                </ModelSelectorTrigger>
+                <ModelSelectorContent>
+                  <ModelSelectorInput placeholder="Search models..." />
+                  <ModelSelectorList>
+                    <ModelSelectorEmpty>No models found.</ModelSelectorEmpty>
+                    {['OpenAI', 'Google'].map(chef => (
+                      <ModelSelectorGroup heading={chef} key={chef}>
+                        {models
+                          .filter(m => m.chef === chef)
+                          .map(m => (
+                            <ModelSelectorItem
+                              key={m.id}
+                              onSelect={() => {
+                                setModel(m.id);
+                                setModelSelectorOpen(false);
+                              }}
+                              value={m.id}
+                            >
+                              <ModelSelectorLogo
+                                provider={m.chefSlug}
+                                className="size-5"
+                              />
 
-                            <ModelSelectorName>{m.name}</ModelSelectorName>
-                            <ModelSelectorLogoGroup>
-                              {m.providers.map(provider => (
-                                <ModelSelectorLogo
-                                  className="size-5"
-                                  key={provider}
-                                  provider={provider}
-                                />
-                              ))}
-                            </ModelSelectorLogoGroup>
-                            {model === m.id ? (
-                              <CheckIcon className="ml-auto size-4" />
-                            ) : (
-                              <div className="ml-auto size-4" />
-                            )}
-                          </ModelSelectorItem>
-                        ))}
-                    </ModelSelectorGroup>
-                  ))}
-                </ModelSelectorList>
-              </ModelSelectorContent>
-            </ModelSelector>
+                              <ModelSelectorName>{m.name}</ModelSelectorName>
+                              <ModelSelectorLogoGroup>
+                                {m.providers.map(provider => (
+                                  <ModelSelectorLogo
+                                    className="size-5"
+                                    key={provider}
+                                    provider={provider}
+                                  />
+                                ))}
+                              </ModelSelectorLogoGroup>
+                              {model === m.id ? (
+                                <CheckIcon className="ml-auto size-4" />
+                              ) : (
+                                <div className="ml-auto size-4" />
+                              )}
+                            </ModelSelectorItem>
+                          ))}
+                      </ModelSelectorGroup>
+                    ))}
+                  </ModelSelectorList>
+                </ModelSelectorContent>
+              </ModelSelector>
+            )}
           </PromptInputTools>
           <SubmitButton inProgress={inProgress} />
         </PromptInputFooter>

@@ -1,6 +1,6 @@
-import { internal } from '../_generated/api';
-import { query } from '../_generated/server';
-import type { Disruption, Market } from '../types';
+import { internal } from '../../_generated/api';
+import { query } from '../../_generated/server';
+import type { Disruption, Market } from '../../types';
 
 /** Market summary with computed stats */
 export type MarketSummary = Market & {
@@ -48,30 +48,30 @@ export const getDashboard = query({
     // 1. Active disruptions (status not resolved)
     const allDisruptions = await ctx.db
       .query('disruptions')
-      .withIndex('by_org_id', (q) => q.eq('orgId', orgId))
+      .withIndex('by_org_id', q => q.eq('orgId', orgId))
       .collect();
     const disruptions = allDisruptions.filter(
-      (d) => !d.status || d.status !== 'resolved'
+      d => !d.status || d.status !== 'resolved'
     );
 
     // 2. All bookings for org
     const bookings = await ctx.db
       .query('bookings')
-      .withIndex('by_org_id', (q) => q.eq('orgId', orgId))
+      .withIndex('by_org_id', q => q.eq('orgId', orgId))
       .collect();
 
     // 3. Markets
     const markets = await ctx.db
       .query('markets')
-      .withIndex('by_org_id', (q) => q.eq('orgId', orgId))
+      .withIndex('by_org_id', q => q.eq('orgId', orgId))
       .collect();
 
     // Compute stats
-    const activeBookings = bookings.filter((b) =>
+    const activeBookings = bookings.filter(b =>
       ACTIVE_STATUSES.includes(b.status)
     ).length;
     const pendingBookings = bookings.filter(
-      (b) => b.status === PENDING_STATUS
+      b => b.status === PENDING_STATUS
     ).length;
     const today = Date.now();
     const startOfToday = new Date();
@@ -79,16 +79,17 @@ export const getDashboard = query({
     const endOfToday = new Date();
     endOfToday.setHours(23, 59, 59, 999);
     const todayBookings = bookings.filter(
-      (b) =>
+      b =>
         b.checkInDate <= endOfToday.getTime() &&
         b.checkOutDate >= startOfToday.getTime() &&
         b.status !== 'cancelled'
     );
-    const todaySpend = todayBookings.reduce((s, b) => s + (b.totalCost ?? 0), 0);
+    const todaySpend = todayBookings.reduce(
+      (s, b) => s + (b.totalCost ?? 0),
+      0
+    );
     const bookingsWithRate = bookings.filter(
-      (b) =>
-        (b.ratePerRoom ?? 0) > 0 &&
-        b.status !== 'cancelled'
+      b => (b.ratePerRoom ?? 0) > 0 && b.status !== 'cancelled'
     );
     const avgRatePerNight =
       bookingsWithRate.length > 0
@@ -100,7 +101,7 @@ export const getDashboard = query({
 
     // Market summaries
     const marketMap = new Map(
-      markets.map((m) => [
+      markets.map(m => [
         m._id,
         {
           ...m,
@@ -133,13 +134,13 @@ export const getDashboard = query({
     // 4. Recent activity from audit log
     const auditEntries = await ctx.db
       .query('auditLog')
-      .withIndex('by_org_id', (q) => q.eq('orgId', orgId))
+      .withIndex('by_org_id', q => q.eq('orgId', orgId))
       .collect();
     // Sort by creation time desc and take most recent
     auditEntries.sort((a, b) => b._creationTime - a._creationTime);
     const recentActivity: RecentActivityItem[] = auditEntries
       .slice(0, 15)
-      .map((e) => ({
+      .map(e => ({
         _id: e._id,
         action: e.action,
         entityType: e.entityType,

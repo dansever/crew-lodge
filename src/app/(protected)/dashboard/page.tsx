@@ -13,7 +13,7 @@ export default async function DashboardPage() {
 
   const token = (await getToken({ template: 'convex' })) ?? '';
   const preloadedDashboard = await preloadQuery(
-    api.functions.dashboard.getDashboard,
+    api.functions.aggregates.dashboard.getDashboard,
     {},
     { token }
   );

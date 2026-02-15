@@ -1,7 +1,7 @@
 'use client';
 
 import { api } from '@/convex/_generated/api';
-import type { BookingWithDetails } from '@/convex/functions/bookings';
+import type { Booking } from '@/convex/types';
 import { Preloaded, usePreloadedQuery } from 'convex/react';
 import {
   createContext,
@@ -11,11 +11,11 @@ import {
 } from 'react';
 
 export type PreloadedBookings = Preloaded<
-  typeof api.functions.bookings.getMyBookingsPage
+  typeof api.functions.bookings.listMyBookings
 >;
 
 interface BookingsContextValue {
-  bookings: BookingWithDetails[];
+  bookings: Booking[];
 }
 
 const BookingsContext = createContext<BookingsContextValue | null>(null);
@@ -30,8 +30,10 @@ export function BookingsContextProvider({
   children,
 }: BookingsContextProviderProps) {
   const data = usePreloadedQuery(preloadedBookings);
-  const bookings = data ?? [];
-  const value = useMemo<BookingsContextValue>(() => ({ bookings }), [bookings]);
+  const value = useMemo<BookingsContextValue>(
+    () => ({ bookings: data ?? [] }),
+    [data]
+  );
 
   return (
     <BookingsContext.Provider value={value}>{children}</BookingsContext.Provider>

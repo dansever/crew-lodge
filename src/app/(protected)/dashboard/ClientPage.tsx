@@ -117,10 +117,12 @@ export default function DashboardClientPage() {
                         </span>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {d.crewSize} crew - {d.location}
-                        {typeof d.nights === 'number'
-                          ? ` - ${d.nights} night${d.nights === 1 ? '' : 's'}`
-                          : ''}
+                        {d.eventSummary ||
+                          `${d.crewSize} crew - ${d.location}${
+                            typeof d.nights === 'number'
+                              ? ` - ${d.nights} night${d.nights === 1 ? '' : 's'}`
+                              : ''
+                          }`}
                       </p>
                       {d.eventReason && (
                         <p className="text-xs text-muted-foreground/80 truncate">

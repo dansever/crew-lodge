@@ -1,7 +1,23 @@
+import { crud } from 'convex-helpers/server/crud';
 import { v } from 'convex/values';
 import { internal } from '../_generated/api';
 import { query } from '../_generated/server';
-import type { Airport, Booking, Hotel } from '../types';
+import schema from '../schema';
+import type { Booking } from '../types';
+
+export const { create, read, update, destroy } = crud(schema, 'bookings');
+
+export const getBookingById = query({
+  args: { id: v.id('bookings') },
+  handler: async (ctx, args): Promise<Booking | null> => {
+    const orgId = await ctx.runQuery(internal.functions.orgs.getMyOrgId);
+    const booking = await ctx.db.get(args.id);
+    if (!booking || booking.orgId !== orgId) {
+      return null;
+    }
+    return booking;
+  },
+});
 
 /**
  * List bookings for the current user's org
@@ -27,40 +43,3 @@ export type BookingWithDetails = Booking & {
   airportCode: string;
   hotelName: string;
 };
-
-/**
- * Preload-friendly page payload for bookings.
- */
-export const getMyBookingsPage = query({
-  args: {},
-  handler: async (ctx): Promise<BookingWithDetails[]> => {
-    const orgId = await ctx.runQuery(internal.functions.orgs.getMyOrgId);
-    const [bookings, hotels, airports] = await Promise.all([
-      ctx.db
-        .query('bookings')
-        .withIndex('by_org_id', q => q.eq('orgId', orgId))
-        .collect(),
-      ctx.db
-        .query('hotels')
-        .withIndex('by_org_id', q => q.eq('orgId', orgId))
-        .collect(),
-      ctx.db
-        .query('airports')
-        .withIndex('by_org_id', q => q.eq('orgId', orgId))
-        .collect(),
-    ]);
-
-    const hotelById = new Map(hotels.map((h: Hotel) => [h._id, h]));
-    const airportById = new Map(airports.map((a: Airport) => [a._id, a]));
-
-    return bookings.map(b => {
-      const airport = airportById.get(b.airportId);
-      const hotel = hotelById.get(b.hotelId);
-      return {
-        ...b,
-        airportCode: airport?.iata ?? airport?.icao ?? airport?.name ?? '-',
-        hotelName: hotel?.name ?? 'Unknown Hotel',
-      };
-    });
-  },
-});

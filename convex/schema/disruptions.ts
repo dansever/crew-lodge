@@ -8,12 +8,13 @@ export const disruptions = defineTable({
   orgId: v.id('orgs'),
   // data
   // flight info
-  location: v.string(),
+  airportId: v.optional(v.id('airports')),
+  location: v.optional(v.string()), // legacy; prefer airportId
   marketId: v.id('markets'),
   // disruption details
   eventType: v.string(),
   eventReason: v.optional(v.string()),
-  eventLocation: v.optional(v.string()),
+  eventSummary: v.optional(v.string()),
   // crew
   crewSize: v.number(),
   nights: v.number(),
@@ -31,5 +32,5 @@ export const disruptions = defineTable({
   updatedAt: updatedAtValidator,
 })
   .index('by_org_id', ['orgId'])
-  .index('by_location', ['location'])
+  .index('by_airport_id', ['airportId'])
   .index('by_status', ['status']);

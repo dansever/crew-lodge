@@ -32,9 +32,9 @@ export function HotelsContextProvider({
 
   // Filter by selected market only when we have both; no refetch when market switches
   const hotels = useMemo<Hotel[] | undefined>(() => {
-    if (!allHotels || !currentMarket?._id) return undefined;
+    if (!allHotels || !currentMarket) return undefined;
     return allHotels.filter((h: Hotel) => h.marketId === currentMarket._id);
-  }, [allHotels, currentMarket?._id]);
+  }, [allHotels, currentMarket]);
 
   const value = useMemo<HotelsContextValue>(() => ({ hotels }), [hotels]);
 

@@ -3,7 +3,7 @@ description: 'CrewLodge codebase organization, layering, and file structure conv
 alwaysApply: true
 ---
 
-# CrewLodge Codebase Organization
+# CrewLodge Codebase Structure
 
 This rule defines how files are organized and how concerns are split across frontend, backend, and AI layers.
 
@@ -21,6 +21,7 @@ This rule defines how files are organized and how concerns are split across fron
   - `ClientPage.tsx`: UI composition and interaction logic
 
 Required rules:
+
 - `page.tsx` does authentication gating and Convex preloading/fetching.
 - `ClientPage.tsx` should not fetch initial page payload directly if server preloading exists.
 - `ContextProvider.tsx` should expose strongly typed data + convenience selectors.
@@ -38,9 +39,17 @@ Required rules:
 - `src/modules/*`: domain UI modules with richer behavior (example: hotel sheet/card workflows).
 
 Guidelines:
+
 - Prefer importing app-level building blocks from `@/stories` for consistency.
 - Keep `src/components/ui` generic and presentation-focused.
 - Avoid embedding domain business rules in UI primitives.
+
+### Stories Conventions
+
+- Components in `src/stories/` must be **generic** only. Domain-specific wrappers (e.g. AirportCombobox, MarketCombobox) belong in `src/modules/<domain>/`.
+- **No `.stories` files** — stories are product UI building blocks, not Storybook story modules.
+- **No demo or mock data** — components receive all data via props from the consumer.
+- Keep components presentation-focused; domain logic stays in modules.
 
 ## Convex Backend Structure
 
@@ -53,6 +62,7 @@ Guidelines:
   - Internal auth/org helpers stay in dedicated modules (`auth.ts`, `orgs.ts`).
 
 Data/authorization rules:
+
 - Every tenant-facing read/write must be scoped to current org on the server side.
 - Do not trust org IDs from the client for authorization.
 - Keep v1 schema fields minimal; add fields only when directly required by a live workflow.

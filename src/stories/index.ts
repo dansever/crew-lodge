@@ -5,6 +5,7 @@ export * from './card/Card';
 export * from './card/KpiCard';
 export * from './data-field/DataField';
 export * from './date-picker/DatePicker';
+export * from './entity-selector/EntitySelector';
 export * from './form/ChoiceCard';
 export * from './form/Input';
 export * from './form/Select';

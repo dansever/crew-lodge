@@ -12,16 +12,15 @@ type Status =
   | 'resolved';
 
 const styles: Record<Status, string> = {
-  confirmed: 'bg-status-confirmed-bg text-status-confirmed-text',
-  pending: 'bg-status-pending-bg text-status-pending-text',
-  completed: 'bg-muted text-muted-foreground',
-  cancelled: 'bg-status-cancelled-bg text-status-cancelled-text line-through',
-  checked_in: 'bg-status-open-bg text-status-open-text',
-  open: 'bg-status-urgent-bg text-status-urgent-text',
-  searching:
-    'bg-status-pending-bg text-status-pending-text animate-pulse-subtle',
-  options_ready: 'bg-status-confirmed-bg text-status-confirmed-text',
-  resolved: 'bg-muted text-muted-foreground',
+  confirmed: 'bg-green-200 text-green-800',
+  pending: 'bg-yellow-200 text-yellow-800',
+  completed: 'bg-green-200 text-green-800',
+  cancelled: 'bg-red-200 text-red-800 line-through',
+  checked_in: 'bg-blue-200 text-blue-800',
+  open: 'bg-sky-200 text-sky-800',
+  searching: 'bg-amber-200 text-amber-800 animate-pulse-subtle',
+  options_ready: 'bg-blue-200 text-blue-800',
+  resolved: 'bg-emerald-200 text-emerald-800',
 };
 
 const labels: Record<Status, string> = {
