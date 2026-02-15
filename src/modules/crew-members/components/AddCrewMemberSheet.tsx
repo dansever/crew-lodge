@@ -132,7 +132,7 @@ export function AddCrewMemberSheet({
             <User className="h-3.5 w-3.5" />
             Identity
           </h3>
-          <div className="grid grid-cols-2 gap-3 space-y-3">
+          <div className="grid grid-cols-2 gap-3">
             <DataField className="col-span-2" label="Name *">
               <Input
                 placeholder="e.g. Jane Smith"
