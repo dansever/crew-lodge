@@ -1,9 +1,8 @@
 'use client';
 
 import type { AirportId, Disruption } from '@/convex/types';
-import { AirportCombobox } from '@/modules/airports/AirportCombobox';
-import { DisruptionCard } from '@/modules/disruptions/DisruptionCard';
-import { DisruptionSheet } from '@/modules/disruptions/DisruptionSheet';
+import { AirportCombobox } from '@/modules/airports';
+import { DisruptionCard, DisruptionSheet } from '@/modules/disruptions';
 import { Button, PageLayout } from '@/stories';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';

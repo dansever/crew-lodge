@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/convex/_generated/api';
 import type { Market, MarketId } from '@/convex/types';
-import { AddAirportSheet } from '@/modules/airports/AddAirportSheet';
+import { AddAirportSheet } from '@/modules/airports';
 import { Button, Input, Sheet } from '@/stories';
 import { useQuery } from 'convex/react';
 import { CheckCircle2, ChevronDown, MapPin, Plane, Plus } from 'lucide-react';

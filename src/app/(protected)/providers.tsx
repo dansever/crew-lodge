@@ -1,6 +1,7 @@
 'use client';
 
 import { MarketProvider } from '@/app/(protected)/_contexts/MarketContext';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useAuth } from '@clerk/nextjs';
 import { CopilotKit } from '@copilotkit/react-core';
 import { CopilotSidebar } from '@copilotkit/react-ui';
@@ -28,13 +29,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
     >
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <MarketProvider>
-          <CopilotKit runtimeUrl="/api/copilotkit" agent="getHotelInfoAgent">
-            {children}
-            <CopilotSidebar />
-            <Toaster />
-          </CopilotKit>
-        </MarketProvider>
+        <TooltipProvider delayDuration={0}>
+          <MarketProvider>
+            <CopilotKit runtimeUrl="/api/copilotkit" agent="getHotelInfoAgent">
+              {children}
+              <CopilotSidebar />
+              <Toaster />
+            </CopilotKit>
+          </MarketProvider>
+        </TooltipProvider>
       </ConvexProviderWithClerk>
     </ThemeProvider>
   );

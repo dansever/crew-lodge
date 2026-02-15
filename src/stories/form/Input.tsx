@@ -91,7 +91,7 @@ export function Input({
           type={type}
           placeholder={placeholder}
           className={cn(
-            'bg-white w-full focus-visible:ring-0 focus-visible:border-primary rounded-lg ',
+            'bg-white w-full focus-visible:ring-0 focus-visible:border-primary rounded-lg',
             inputPaddingClass,
             className
           )}

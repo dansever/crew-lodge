@@ -41,11 +41,11 @@ const item = {
 
 function formatAddress(address: Hotel['address']): string {
   const parts = [
-    address.street,
-    address.city,
-    address.state,
-    address.postalCode,
-    address.country,
+    address?.street,
+    address?.city,
+    address?.state,
+    address?.postalCode,
+    address?.country,
   ].filter(Boolean);
   return parts.join(', ') || '—';
 }

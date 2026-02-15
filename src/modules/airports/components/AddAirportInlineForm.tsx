@@ -2,7 +2,7 @@
 
 import { api } from '@/convex/_generated/api';
 import type { Airport, MarketId } from '@/convex/types';
-import { MarketCombobox } from '@/modules/markets/MarketCombobox';
+import { MarketCombobox } from '@/modules/markets';
 import { Button, Input } from '@/stories';
 import { useMutation, useQuery } from 'convex/react';
 import { Plane } from 'lucide-react';

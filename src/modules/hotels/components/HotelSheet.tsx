@@ -5,6 +5,10 @@ import { api } from '@/convex/_generated/api';
 import type { Hotel, MarketId } from '@/convex/types';
 import { cn } from '@/lib/utils';
 import {
+  lookupHotelInfo,
+  type HotelLookupResult,
+} from '@/services/hotels/lookup-hotel-info';
+import {
   Button,
   DataField,
   Input,
@@ -23,7 +27,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { lookupHotelInfo, type HotelLookupResult } from './actions';
 
 // -----------------------------------------------------------------------------
 // Types & helpers

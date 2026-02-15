@@ -18,7 +18,14 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { UserButton, useUser } from '@clerk/nextjs';
-import { AlertTriangle, Calendar, Home, Hotel, Settings } from 'lucide-react';
+import {
+  AlertTriangle,
+  Calendar,
+  Home,
+  Hotel,
+  Settings,
+  Users,
+} from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -253,6 +260,11 @@ export const sidebarTabs: SidebarTabItem[] = [
     value: 'Hotels',
     url: '/hotels',
     icon: Hotel,
+  },
+  {
+    value: 'Crew',
+    url: '/crew',
+    icon: Users,
   },
   {
     value: 'Disruptions',

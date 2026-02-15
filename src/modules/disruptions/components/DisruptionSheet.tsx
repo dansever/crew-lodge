@@ -1,6 +1,5 @@
 'use client';
 
-import ChatMessageInput from '@/app/(protected)/_components/chat-ui/ChatMessageInput';
 import { FieldGroup } from '@/components/ui/field';
 import { api } from '@/convex/_generated/api';
 import type {
@@ -11,10 +10,8 @@ import type {
   MarketId,
 } from '@/convex/types';
 import { cn } from '@/lib/utils';
-import { AirportCombobox } from '@/modules/airports/AirportCombobox';
-import { AddAirportInlineForm } from '@/modules/airports/AddAirportInlineForm';
-import { AddMarketInlineForm } from '@/modules/markets/AddMarketInlineForm';
-import { MarketCombobox } from '@/modules/markets/MarketCombobox';
+import { AirportCombobox, AddAirportInlineForm } from '@/modules/airports';
+import { AddMarketInlineForm, MarketCombobox } from '@/modules/markets';
 import { parseDisruptionText } from '@/services/disruptions/parse-disruption';
 import type { ParseDisruptionResult } from '@/services/disruptions/parse-disruption-schema';
 import {
@@ -29,6 +26,7 @@ import {
 import { useMutation } from 'convex/react';
 import { AlertCircle, FileText, Pencil, Sparkles } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { DisruptionParseInput } from './DisruptionParseInput';
 
 // -----------------------------------------------------------------------------
 // Types & helpers
@@ -206,7 +204,6 @@ export function DisruptionSheet({
 
   const [form, setForm] = useState<FormData>(EMPTY_FORM);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [aiPrompt, setAiPrompt] = useState('');
   const [parseError, setParseError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isParsing, setIsParsing] = useState(false);
@@ -228,26 +225,28 @@ export function DisruptionSheet({
     if (!open) {
       setForm(EMPTY_FORM);
       setSubmitError(null);
-      setAiPrompt('');
       setParseError(null);
       setIsEditing(false);
     }
   }, [open]);
 
-  const handleAiParse = useCallback(async () => {
-    const trimmed = aiPrompt.trim();
-    if (!trimmed) return;
-    setParseError(null);
-    setIsParsing(true);
-    try {
-      const data = await parseDisruptionText(trimmed);
-      setForm(f => applyParseResultToForm(f, data, airports));
-    } catch (e) {
-      setParseError(e instanceof Error ? e.message : 'Parse failed');
-    } finally {
-      setIsParsing(false);
-    }
-  }, [aiPrompt, airports]);
+  const handleAiParse = useCallback(
+    async (text: string) => {
+      const trimmed = text.trim();
+      if (!trimmed) return;
+      setParseError(null);
+      setIsParsing(true);
+      try {
+        const data = await parseDisruptionText(trimmed);
+        setForm(f => applyParseResultToForm(f, data, airports));
+      } catch (e) {
+        setParseError(e instanceof Error ? e.message : 'Parse failed');
+      } finally {
+        setIsParsing(false);
+      }
+    },
+    [airports]
+  );
 
   const locationDisplayLabel = disruption
     ? (() => {
@@ -494,29 +493,10 @@ export function DisruptionSheet({
               Describe the disruption to auto-fill the form.
             </p>
             <div className="flex gap-2">
-              <ChatMessageInput
+              <DisruptionParseInput
                 inProgress={isParsing}
                 onSend={handleAiParse}
-                modelSelector={false}
               />
-              {/*
-              <TextArea
-                placeholder="e.g. Flight delayed 9 hours in Denver INTL, need rooms for 8 crew"
-                rows={2}
-                value={aiPrompt}
-                onChange={e => setAiPrompt(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleAiParse()}
-                className="flex-1 min-h-0"
-              />
-              <Button
-                text="Generate"
-                size="sm"
-                onClick={handleAiParse}
-                disabled={!aiPrompt.trim() || isParsing}
-                loading={isParsing}
-                icon={Sparkles}
-              />
-              */}
             </div>
             {parseError && (
               <p className="text-xs text-destructive">{parseError}</p>

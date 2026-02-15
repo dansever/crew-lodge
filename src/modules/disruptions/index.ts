@@ -1,2 +1,2 @@
-export { DisruptionCard } from './DisruptionCard';
-export { DisruptionSheet } from './DisruptionSheet';
+export { DisruptionCard, type DisruptionCardProps } from './components/DisruptionCard';
+export { DisruptionSheet, type DisruptionSheetProps } from './components/DisruptionSheet';
