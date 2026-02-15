@@ -1,0 +1,19 @@
+// .vscode/settings.json
+{
+  "files.exclude": {
+    ".next": true,
+    "node_modules": true,
+    ".storybook": true,
+    ".clerk": true,
+    ".mastra": true,
+    ".claude": true,
+    ".pnpm-store": true
+  },
+
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "[typescript]": {
+    "editor.formatOnSave": true
+  }
+}

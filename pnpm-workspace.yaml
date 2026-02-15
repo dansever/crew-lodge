@@ -1,3 +1,9 @@
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+
+onlyBuiltDependencies:
+  - "@clerk/shared"
+  - "@scarf/scarf"
+  - esbuild
+  - msw
