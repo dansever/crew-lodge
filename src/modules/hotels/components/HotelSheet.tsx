@@ -5,9 +5,10 @@ import { api } from '@/convex/_generated/api';
 import type { Hotel, MarketId } from '@/convex/types';
 import { cn } from '@/lib/utils';
 import {
-  lookupHotelInfo,
-  type HotelLookupResult,
-} from '@/services/hotels/lookup-hotel-info';
+  parsePlaceToAddress,
+  PlacesAutocomplete,
+  type PlaceDetails,
+} from '@/modules/maps';
 import {
   Button,
   DataField,
@@ -24,7 +25,6 @@ import {
   MapPin,
   Pencil,
   Phone,
-  Sparkles,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -45,6 +45,7 @@ interface FormData {
   phone: string;
   email: string;
   website: string;
+  googleMapsPlaceId: string;
   contactPerson: string;
   bookingEmail: string;
   slaCompliance: string;
@@ -66,6 +67,7 @@ const EMPTY_FORM: FormData = {
   phone: '',
   email: '',
   website: '',
+  googleMapsPlaceId: '',
   contactPerson: '',
   bookingEmail: '',
   slaCompliance: '',
@@ -88,6 +90,7 @@ function hotelToForm(hotel: Hotel): FormData {
     phone: hotel.phone ?? '',
     email: hotel.email ?? '',
     website: hotel.website ?? '',
+    googleMapsPlaceId: hotel.googleMapsPlaceId ?? '',
     contactPerson: hotel.contactPerson ?? '',
     bookingEmail: hotel.bookingEmail ?? '',
     slaCompliance: hotel.slaCompliance?.toString() ?? '',
@@ -96,22 +99,6 @@ function hotelToForm(hotel: Hotel): FormData {
     notes: hotel.notes ?? '',
     isActive: hotel.isActive ?? true,
     isPreferred: hotel.isPreferred ?? false,
-  };
-}
-
-function applyLookupToForm(form: FormData, data: HotelLookupResult): FormData {
-  return {
-    ...form,
-    name: data.name ?? data.brand ?? form.name,
-    chain: data.brand ?? form.chain,
-    street: data.address ?? form.street,
-    city: data.city ?? form.city,
-    state: data.state ?? form.state,
-    country: data.country ?? form.country,
-    postalCode: data.postalCode ?? form.postalCode,
-    phone: data.phone ?? form.phone,
-    email: data.email ?? form.email,
-    website: data.website ?? form.website,
   };
 }
 
@@ -130,6 +117,7 @@ function formToPayload(form: FormData, marketId: MarketId) {
     phone: form.phone.trim() || undefined,
     email: form.email.trim() || undefined,
     website: form.website.trim() || undefined,
+    googleMapsPlaceId: form.googleMapsPlaceId.trim() || undefined,
     contactPerson: form.contactPerson.trim() || undefined,
     bookingEmail: form.bookingEmail.trim() || undefined,
     slaCompliance: form.slaCompliance ? Number(form.slaCompliance) : undefined,
@@ -206,10 +194,7 @@ export function HotelSheet({
 
   const [form, setForm] = useState<FormData>(EMPTY_FORM);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [aiPrompt, setAiPrompt] = useState('');
-  const [lookupError, setLookupError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLookingUp, setIsLookingUp] = useState(false);
 
   const hotel = hotelProp;
   const org = useQuery(api.functions.orgs.getMyOrg);
@@ -226,26 +211,25 @@ export function HotelSheet({
     if (!open) {
       setForm(EMPTY_FORM);
       setSubmitError(null);
-      setAiPrompt('');
-      setLookupError(null);
       setIsEditing(false);
     }
   }, [open]);
 
-  const handleAiLookup = useCallback(async () => {
-    const trimmed = aiPrompt.trim();
-    if (!trimmed) return;
-    setLookupError(null);
-    setIsLookingUp(true);
-    try {
-      const data = await lookupHotelInfo(trimmed);
-      setForm(f => applyLookupToForm(f, data));
-    } catch (e) {
-      setLookupError(e instanceof Error ? e.message : 'Lookup failed');
-    } finally {
-      setIsLookingUp(false);
-    }
-  }, [aiPrompt]);
+  const handlePlaceSelect = useCallback((place: PlaceDetails) => {
+    const address = parsePlaceToAddress(place);
+    setForm(f => ({
+      ...f,
+      name: place.displayName?.text ?? place.name ?? f.name,
+      street: address.street,
+      city: address.city,
+      state: address.state,
+      postalCode: address.postalCode,
+      country: address.country,
+      phone: place.internationalPhoneNumber ?? f.phone,
+      website: place.websiteUri ?? f.website,
+      googleMapsPlaceId: place.id ?? f.googleMapsPlaceId,
+    }));
+  }, []);
 
   const handleCreate = useCallback(async () => {
     setSubmitError(null);
@@ -358,39 +342,6 @@ export function HotelSheet({
       footer={<div className="flex gap-2 justify-end">{cfg.footer}</div>}
     >
       <>
-        {/* AI Lookup - only in add/edit mode */}
-        {(effectiveMode === 'add' || effectiveMode === 'edit') && (
-          <div className="rounded-lg border bg-amber-50/50 dark:bg-amber-950/20 px-4 py-3 space-y-2 mb-1">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-500 shrink-0" />
-              <span className="text-sm font-medium">AI lookup</span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Enter hotel name and location to auto-fill details.
-            </p>
-            <div className="flex gap-2">
-              <Input
-                placeholder="e.g. Hilton in TLV"
-                value={aiPrompt}
-                onChange={e => setAiPrompt(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleAiLookup()}
-                className="flex-1"
-              />
-              <Button
-                text="Lookup"
-                size="sm"
-                onClick={handleAiLookup}
-                disabled={!aiPrompt.trim() || isLookingUp}
-                loading={isLookingUp}
-                icon={Sparkles}
-              />
-            </div>
-            {lookupError && (
-              <p className="text-xs text-destructive">{lookupError}</p>
-            )}
-          </div>
-        )}
-
         <FieldGroup className="flex flex-col gap-6 px-1">
           {/* 1. Identity & status */}
           <FormSection title="Identity" icon={Building2}>
@@ -470,7 +421,36 @@ export function HotelSheet({
                 </p>
               </DataField>
             ) : (
-              <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-3">
+                <DataField label="Search address">
+                  <PlacesAutocomplete
+                    placeholder="e.g. 123 Main St, New York"
+                    minQueryLength={3}
+                    value={
+                      form.street || form.city || form.country
+                        ? {
+                            id: '',
+                            name: formatAddress(form),
+                            displayName: { text: formatAddress(form) },
+                            formattedAddress: formatAddress(form),
+                          }
+                        : null
+                    }
+                    onSelect={handlePlaceSelect}
+                    onClear={() =>
+                      setForm(f => ({
+                        ...f,
+                        street: '',
+                        city: '',
+                        state: '',
+                        postalCode: '',
+                        country: '',
+                        googleMapsPlaceId: '',
+                      }))
+                    }
+                  />
+                </DataField>
+                <div className="grid grid-cols-2 gap-3">
                 <DataField label="Street">
                   <Input
                     placeholder="Street address"
@@ -516,6 +496,7 @@ export function HotelSheet({
                     }
                   />
                 </DataField>
+                </div>
               </div>
             )}
           </FormSection>

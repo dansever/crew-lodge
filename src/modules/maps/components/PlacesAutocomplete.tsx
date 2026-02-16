@@ -4,7 +4,7 @@ import { MapPin, Search, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import type { PlaceDetails } from './place-types';
+import type { PlaceDetails } from '../place-types';
 
 interface PlacePrediction {
   placeId: string;
@@ -94,6 +94,8 @@ export function PlacesAutocomplete({
   // Handle prediction selection → fetch full details (cached by placeId)
   const handleSelectPrediction = useCallback(
     async (prediction: PlacePrediction) => {
+      console.log('[PlacesAutocomplete] Autocomplete selection:', prediction);
+
       setError(null);
       setSuggestions([]);
       setIsOpen(false);
@@ -101,6 +103,7 @@ export function PlacesAutocomplete({
 
       const cached = detailsCacheRef.current.get(prediction.placeId);
       if (cached) {
+        console.log('[PlacesAutocomplete] Place details (cached):', cached);
         setSelectedPlace(cached);
         setQuery(cached.displayName?.text ?? cached.name ?? prediction.text);
         onSelect(cached);
@@ -121,6 +124,7 @@ export function PlacesAutocomplete({
           );
         }
 
+        console.log('[PlacesAutocomplete] Place details (fetched):', data);
         detailsCacheRef.current.set(prediction.placeId, data);
         setSelectedPlace(data);
         setQuery(data.displayName?.text ?? data.name ?? prediction.text);

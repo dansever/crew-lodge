@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import { useRef } from 'react';
 
@@ -47,6 +47,8 @@ export function AppSidebar() {
   const pathname = usePathname();
   const isCollapsed = state === 'collapsed';
   const isDark = theme === 'dark';
+
+  const router = useRouter();
 
   React.useEffect(() => {
     setIsClient(true);
@@ -84,7 +86,10 @@ export function AppSidebar() {
           {!mounted ? (
             <BrandLogo theme="light" /> // Default fallback
           ) : (
-            <BrandLogo theme={isDark ? 'dark' : 'light'} />
+            <BrandLogo
+              theme={isDark ? 'dark' : 'light'}
+              onClick={() => router.push('/dashboard')}
+            />
           )}
         </div>
         <SidebarTrigger

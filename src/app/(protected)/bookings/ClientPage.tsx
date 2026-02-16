@@ -4,16 +4,10 @@ import { useMarketContext } from '@/app/(protected)/_contexts/MarketContext';
 import { useBookingsContext } from '@/app/(protected)/bookings/ContextProvider';
 import { PageLayout, StatusBadge } from '@/stories';
 import { motion } from 'framer-motion';
-import {
-  Calendar,
-  DollarSign,
-  MapPin,
-  Plus,
-  Search,
-  Users,
-} from 'lucide-react';
+import { Calendar, DollarSign, Plus, Search, Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { AppHeader } from '../_components/AppHeader';
+import HotelOccupancyGrid from './_components/HotelOccupancyGrid';
 
 const statusFilters = [
   'all',
@@ -41,24 +35,26 @@ function formatCheckIn(ts: number) {
 
 export default function BookingsClientPage() {
   const { currentMarket } = useMarketContext();
-  const { bookings } = useBookingsContext();
+  const { bookings, hotels, isLoading } = useBookingsContext();
   const [filter, setFilter] = useState<string>('all');
   const [search, setSearch] = useState('');
 
   const filtered = useMemo(() => {
     return bookings.filter(b => {
-      if (currentMarket && b.marketId !== currentMarket._id) return false;
       if (filter !== 'all' && b.status !== filter) return false;
-      if (
-        search &&
-        !(b.flightNumber ?? '').toLowerCase().includes(search.toLowerCase()) &&
-        !(b.confirmationNumber ?? '').toLowerCase().includes(search.toLowerCase())
-      ) {
-        return false;
+      if (search) {
+        const searchLower = search.toLowerCase();
+        const flightMatch = (b.flightNumber ?? '')
+          .toLowerCase()
+          .includes(searchLower);
+        const invoiceMatch = (b.invoiceNumber ?? '')
+          .toLowerCase()
+          .includes(searchLower);
+        if (!flightMatch && !invoiceMatch) return false;
       }
       return true;
     });
-  }, [bookings, currentMarket, filter, search]);
+  }, [bookings, filter, search]);
 
   const marketName = currentMarket?.name ?? 'All Markets';
 
@@ -79,7 +75,6 @@ export default function BookingsClientPage() {
             <Plus className="h-4 w-4" /> New Booking
           </button>
         </div>
-
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex gap-1 rounded-lg border bg-card p-1">
             {statusFilters.map(s => (
@@ -108,6 +103,12 @@ export default function BookingsClientPage() {
           </div>
         </div>
 
+        <HotelOccupancyGrid
+          hotels={hotels}
+          bookings={filtered}
+          isLoading={isLoading}
+        />
+
         <motion.div
           variants={container}
           initial="hidden"
@@ -124,9 +125,6 @@ export default function BookingsClientPage() {
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-2 flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-foreground">
-                      {b.confirmationNumber ?? '-'}
-                    </span>
                     <span className="text-sm text-muted-foreground">-</span>
                     <span className="text-sm font-medium text-foreground">
                       {b.flightNumber ?? '-'}
@@ -148,10 +146,6 @@ export default function BookingsClientPage() {
                     )}
                   </div>
                   <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="h-3.5 w-3.5" />
-                      {b.airportCode} - {b.hotelName}
-                    </span>
                     <span className="flex items-center gap-1.5">
                       <Users className="h-3.5 w-3.5" />
                       {b.crewSize} crew - {b.roomsBooked} rooms

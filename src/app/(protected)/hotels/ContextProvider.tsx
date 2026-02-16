@@ -2,8 +2,8 @@
 
 import { useMarketContext } from '@/app/(protected)/_contexts/MarketContext';
 import { api } from '@/convex/_generated/api';
-import type { Hotel } from '@/convex/types';
-import { Preloaded, usePreloadedQuery } from 'convex/react';
+import type { Booking, Hotel } from '@/convex/types';
+import { Preloaded, usePreloadedQuery, useQuery } from 'convex/react';
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
 /** Preloaded hotels for the current org */
@@ -14,6 +14,8 @@ export type PreloadedHotels = Preloaded<
 interface HotelsContextValue {
   /** Hotels for the currently selected market; undefined when no market or still loading */
   hotels: Hotel[] | undefined;
+  /** All bookings for hotels in this market */
+  reservations: Booking[] | undefined;
 }
 
 const HotelsContext = createContext<HotelsContextValue | null>(null);
@@ -30,13 +32,26 @@ export function HotelsContextProvider({
   const { currentMarket } = useMarketContext();
   const allHotels = usePreloadedQuery(preloadedHotels);
 
-  // Filter by selected market only when we have both; no refetch when market switches
+  const reservations = useQuery(
+    api.functions.bookings.listMyBookingsByMarketAndDateRange,
+    currentMarket
+      ? {
+          marketId: currentMarket._id,
+          startDate: new Date().getTime(),
+          endDate: new Date().getTime(),
+        }
+      : 'skip'
+  );
+
   const hotels = useMemo<Hotel[] | undefined>(() => {
     if (!allHotels || !currentMarket) return undefined;
     return allHotels.filter((h: Hotel) => h.marketId === currentMarket._id);
   }, [allHotels, currentMarket]);
 
-  const value = useMemo<HotelsContextValue>(() => ({ hotels }), [hotels]);
+  const value = useMemo<HotelsContextValue>(
+    () => ({ hotels, reservations: reservations ?? undefined }),
+    [hotels, reservations]
+  );
 
   return (
     <HotelsContext.Provider value={value}>{children}</HotelsContext.Provider>

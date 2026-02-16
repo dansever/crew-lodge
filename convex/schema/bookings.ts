@@ -7,24 +7,22 @@ export const bookings = defineTable({
   orgId: v.id('orgs'),
 
   // References
-  marketId: v.id('markets'),
-  airportId: v.id('airports'), // Which airport the crew is at
   hotelId: v.id('hotels'),
 
   // data
-  confirmationNumber: v.optional(v.string()),
   bookingType: v.optional(v.string()),
-  bookingSource: v.optional(v.string()),
   checkInDate: v.number(),
   checkOutDate: v.number(),
   nights: v.optional(v.number()),
   roomsBooked: v.number(),
   roomType: v.optional(v.string()),
+
   // crew
   crewSize: v.number(),
   crewMembers: v.optional(v.array(bookingCrewAssignmentValidator)),
   crewType: v.optional(v.string()),
   flightNumber: v.optional(v.string()),
+
   // financial
   ratePerRoom: v.optional(v.number()),
   totalCost: v.optional(v.number()),
@@ -38,19 +36,17 @@ export const bookings = defineTable({
   confirmedAt: v.optional(v.number()),
   cancelledAt: v.optional(v.number()),
   cancellationReason: v.optional(v.string()),
+
   // payment
   paymentStatus: v.optional(v.string()),
   invoiceNumber: v.optional(v.string()),
   invoiceDocumentId: v.optional(v.id('documents')), // Scanned invoice
   paidAt: v.optional(v.number()),
-  // special requests
-  specialRequests: v.optional(v.string()),
-  requiresShuttle: v.optional(v.boolean()),
-  requiresLateCheckout: v.optional(v.boolean()),
+
   // relations
   createdBy: v.optional(v.id('users')),
-  disruptionId: v.optional(v.id('disruptions')),
   notes: v.optional(v.string()),
+
   // timestamp
   updatedAt: updatedAtValidator,
 })

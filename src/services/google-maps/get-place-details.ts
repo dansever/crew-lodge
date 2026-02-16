@@ -13,6 +13,8 @@ const DEFAULT_FIELD_MASK = [
   'name',
   'displayName',
   'formattedAddress',
+  'postalAddress',
+  'addressComponents',
   'location',
   'googleMapsUri',
   'types',

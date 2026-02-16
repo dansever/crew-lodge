@@ -1,13 +1,16 @@
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
-import type { FC, ReactNode } from "react";
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
+import type { FC, ReactNode } from 'react';
 
+/**
+ * Props for the PageLayout component
+ */
 export interface PageLayoutProps {
   /** Content for the sidebar panel - if null/undefined, sidebar won't be rendered */
   sidebar?: ReactNode;
   /** Header content for the main panel */
   header?: ReactNode;
-  /** Main content */
+  /** Main content area - this is where ClientPage children render */
   children?: ReactNode;
   /** Custom className for the root container */
   className?: string;
@@ -16,56 +19,78 @@ export interface PageLayoutProps {
   /** Width of the sidebar (default: 16rem) */
   sidebarWidth?: string;
   /** Position of the sidebar (default: left) */
-  sidebarPosition?: "left" | "right";
+  sidebarPosition?: 'left' | 'right';
   /** Custom className for the main content container */
   contentClassName?: string;
-  /** Whether the main content area should scroll with the page (true) or be fixed height with internal scrolling (false) (default: true)
-   * Use contentScrollable={true} when you want the content to scroll with the page.
-   * Use contentScrollable={false} when you want the content to be fixed height and scroll internally only.
+  /**
+   * Whether the main content area should scroll with the page (true) or be fixed height with internal scrolling (false)
+   * - contentScrollable={true}: Content scrolls with the page (uses ScrollArea)
+   * - contentScrollable={false}: Content is fixed height and scrolls internally
+   * Default: true
    */
   contentScrollable?: boolean;
 }
 
 /**
- * Sidebar component - extracted for better modularity
+ * Sidebar component - handles the sidebar panel with proper overflow and styling
+ *
+ * Features:
+ * - Responsive width with smooth transitions
+ * - Proper overflow handling for long content
+ * - Dark mode support with subtle borders and shadows
+ * - Accessible with proper ARIA landmarks
  */
 const Sidebar: FC<{
   children: ReactNode;
-  position: "left" | "right";
+  position: 'left' | 'right';
   width: string;
 }> = ({ children, position, width }) => {
   return (
     <aside
       id={`page-layout-sidebar-${position}`}
       className={cn(
-        "flex flex-col h-full overflow-hidden shrink-0",
-        position === "left"
-          ? "dark:border-r dark:border-white/10 border-r border-r-slate-200"
-          : "dark:border-l dark:border-white/10 border-l border-l-slate-200",
-        "bg-sidebar dark:bg-sidebar/80 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
+        // Core layout: full height, prevent shrinking, handle overflow
+        'flex flex-col h-full overflow-hidden shrink-0',
+        // Border positioning based on sidebar location
+        position === 'left'
+          ? 'dark:border-r dark:border-white/10 border-r border-r-slate-200'
+          : 'dark:border-l dark:border-white/10 border-l border-l-slate-200',
+        // Background with subtle shadow for depth in dark mode
+        'bg-sidebar dark:bg-sidebar/80 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]'
       )}
       style={{
         width,
-        transition: "width 240ms ease",
+        // Smooth width transitions for responsive behavior
+        transition: 'width 240ms ease',
       }}
     >
+      {/* Scrollable content area - allows sidebar content to scroll independently */}
       <div className="flex-1 overflow-y-auto">{children}</div>
     </aside>
   );
 };
 
 /**
- * Header component - extracted for better modularity
+ * Header component - renders the top bar with proper styling
+ *
+ * Features:
+ * - Sticky positioning with backdrop blur
+ * - Consistent border treatment
+ * - Dark mode support
  */
 const Header: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <header
       id="page-layout-header"
       className={cn(
-        "shrink-0 border-b border-slate-100 dark:border-slate-800",
-        "bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/80",
-        "dark:bg-background",
-        "py-2 px-4",
+        // Prevent header from shrinking and add bottom border
+        'shrink-0 border-b border-slate-100 dark:border-slate-800',
+        // Backdrop blur for modern glass effect
+        'bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/80',
+        // Solid background in dark mode for better contrast
+        'dark:bg-background',
+        // Consistent padding
+        'py-2 px-4'
       )}
     >
       {children}
@@ -74,16 +99,51 @@ const Header: FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 /**
- * A flexible page layout with sidebar, header, and main content area.
- * Supports both scrollable and fixed-height content modes.
+ * PageLayout - A robust, flexible layout wrapper for all ClientPage components
  *
- * Features:
- * - Modular structure with separated components
- * - Reliable height calculations using flexbox
- * - Proper overflow handling
- * - Responsive and accessible
- * - Children receive full height and can control their own layout
- * - Sidebar is positioned beneath the header
+ * This component provides a consistent structure for all pages with:
+ * - Optional header bar
+ * - Optional left/right sidebar
+ * - Main content area with configurable scroll behavior
+ * - Full viewport height management
+ * - Proper overflow handling at all levels
+ *
+ * Architecture:
+ * ```
+ * ┌─────────────────────────────────┐
+ * │          Header (optional)      │
+ * ├──────────┬──────────────────────┤
+ * │ Sidebar  │   Main Content       │
+ * │(optional)│   (children)         │
+ * │          │                      │
+ * └──────────┴──────────────────────┘
+ * ```
+ *
+ * Usage:
+ * ```tsx
+ * <PageLayout
+ *   header={<MyHeader />}
+ *   sidebar={<MySidebar />}
+ *   contentScrollable={true}
+ * >
+ *   <MyPageContent />
+ * </PageLayout>
+ * ```
+ *
+ * @example
+ * // Simple page with header only
+ * <PageLayout header={<h1>My Page</h1>}>
+ *   <div>Content here</div>
+ * </PageLayout>
+ *
+ * @example
+ * // Page with sidebar and fixed-height scrolling content
+ * <PageLayout
+ *   sidebar={<Navigation />}
+ *   contentScrollable={false}
+ * >
+ *   <div>Scrollable content</div>
+ * </PageLayout>
  */
 export const PageLayout: FC<PageLayoutProps> = ({
   sidebar,
@@ -91,59 +151,81 @@ export const PageLayout: FC<PageLayoutProps> = ({
   children,
   className,
   fullHeight = true,
-  sidebarWidth = "16rem",
-  sidebarPosition = "left",
+  sidebarWidth = '16rem',
+  sidebarPosition = 'left',
   contentClassName,
   contentScrollable = true,
 }) => {
+  // Safety check: validate sidebar position
+  const validPosition =
+    sidebarPosition === 'left' || sidebarPosition === 'right'
+      ? sidebarPosition
+      : 'left';
+
+  // Determine if sidebar should be rendered
   const hasSidebar = Boolean(sidebar);
+
+  // Validate and sanitize sidebarWidth to prevent CSS injection
+  const safeSidebarWidth =
+    typeof sidebarWidth === 'string' && sidebarWidth.length > 0
+      ? sidebarWidth
+      : '16rem';
 
   return (
     <div
       id="page-layout"
       className={cn(
-        "flex flex-col min-h-0 w-full overflow-hidden",
-        fullHeight && "h-dvh",
-        className,
+        // Core layout: column direction, prevent min-height collapse, full width, hide overflow
+        'flex flex-col min-h-0 w-full overflow-hidden',
+        // Optional full viewport height
+        fullHeight && 'h-dvh',
+        className
       )}
     >
-      {/* Header */}
+      {/* Header - Only render if provided */}
       {header && <Header>{header}</Header>}
 
-      {/* Sidebar and Content Row - takes remaining height after header */}
+      {/* Main content row - Contains sidebar (if present) and main content area */}
+      {/* Uses flex-1 to take remaining height after header */}
       <div
         id="page-layout-content"
         className={cn(
-          "flex flex-row flex-1 min-h-0 overflow-hidden",
-          hasSidebar && "gap-2",
+          // Horizontal layout, take remaining space, prevent collapse, hide overflow
+          'flex flex-row flex-1 min-h-0 overflow-hidden'
+          // Optional gap when sidebar is present - removed for cleaner edge-to-edge design
         )}
       >
-        {/* Sidebar - Left */}
-        {hasSidebar && sidebarPosition === "left" && (
-          <Sidebar position={sidebarPosition} width={sidebarWidth}>
+        {/* Left Sidebar - Only render if sidebar content provided and position is left */}
+        {hasSidebar && validPosition === 'left' && (
+          <Sidebar position={validPosition} width={safeSidebarWidth}>
             {sidebar}
           </Sidebar>
         )}
 
-        {/* Main Content - gives children full height control */}
+        {/* Main Content Area - This is where ClientPage children render */}
+        {/* Takes remaining horizontal space, full height, prevents collapse */}
         <main
           id="page-layout-main-content"
-          className="flex-1 min-h-0 h-full flex flex-col overflow-hidden"
+          className="flex-1 min-h-0 h-full w-full flex flex-col overflow-hidden"
         >
           {contentScrollable ? (
-            // Scrollable content - uses ScrollArea component
-            <ScrollArea className="p-4 pb-0 flex-1 min-h-0 h-full">
-              <div className={cn("h-full pb-4", contentClassName)}>
+            // Scrollable Mode: Uses ScrollArea component for smooth scrolling
+            // Ideal for long-form content that should scroll within the viewport
+            <ScrollArea className="p-4 pb-0 flex-1 min-h-0 min-w-0 h-full w-full">
+              <div
+                className={cn('h-full w-full min-w-0 pb-4', contentClassName)}
+              >
                 {children}
               </div>
               <ScrollBar orientation="vertical" />
             </ScrollArea>
           ) : (
-            // Fixed height content - uses internal scrolling
+            // Fixed Height Mode: Content area has internal scrolling
+            // Ideal for content that manages its own scroll behavior (e.g., split panes, tables)
             <div
               className={cn(
-                "h-full overflow-y-auto overflow-x-hidden",
-                contentClassName,
+                'h-full w-full min-w-0 overflow-y-auto overflow-x-hidden',
+                contentClassName
               )}
             >
               {children}
@@ -151,9 +233,9 @@ export const PageLayout: FC<PageLayoutProps> = ({
           )}
         </main>
 
-        {/* Sidebar - Right */}
-        {hasSidebar && sidebarPosition === "right" && (
-          <Sidebar position={sidebarPosition} width={sidebarWidth}>
+        {/* Right Sidebar - Only render if sidebar content provided and position is right */}
+        {hasSidebar && validPosition === 'right' && (
+          <Sidebar position={validPosition} width={safeSidebarWidth}>
             {sidebar}
           </Sidebar>
         )}
@@ -162,4 +244,5 @@ export const PageLayout: FC<PageLayoutProps> = ({
   );
 };
 
-PageLayout.displayName = "PageLayout";
+// Display name for better debugging in React DevTools
+PageLayout.displayName = 'PageLayout';

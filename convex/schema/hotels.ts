@@ -11,6 +11,8 @@ export const hotels = defineTable({
   name: v.string(),
   chain: v.optional(v.string()),
   address: addressValidator,
+  fullAddress: v.optional(v.string()),
+  googleMapsPlaceId: v.optional(v.string()),
 
   // contact info
   phone: v.optional(v.string()),

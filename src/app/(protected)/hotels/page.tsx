@@ -12,6 +12,7 @@ export default async function HotelsPage() {
   }
 
   const token = (await getToken({ template: 'convex' })) ?? '';
+
   const preloadedHotels = await preloadQuery(
     api.functions.hotels.listMyHotels,
     {},

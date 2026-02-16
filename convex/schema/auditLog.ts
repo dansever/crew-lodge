@@ -1,11 +1,11 @@
-import { defineTable } from "convex/server";
-import { v } from "convex/values";
+import { defineTable } from 'convex/server';
+import { v } from 'convex/values';
 
 /* -------------------- Audit Log -------------------- */
 export const auditLog = defineTable({
   // identifiers
-  orgId: v.id("orgs"),
-  userId: v.optional(v.id("users")),
+  orgId: v.id('orgs'),
+  userId: v.optional(v.id('users')),
   // data
   action: v.string(),
   entityType: v.optional(v.string()),
@@ -13,5 +13,5 @@ export const auditLog = defineTable({
   oldValues: v.optional(v.any()),
   newValues: v.optional(v.any()),
 })
-  .index("by_org_id", ["orgId"])
-  .index("by_entity", ["entityType", "entityId"]);
+  .index('by_org_id', ['orgId'])
+  .index('by_entity', ['entityType', 'entityId']);

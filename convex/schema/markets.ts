@@ -5,6 +5,8 @@ import { updatedAtValidator } from './common';
 /* -------------------- Markets -------------------- */
 export const markets = defineTable({
   orgId: v.id('orgs'),
+
+  // basic info
   name: v.string(), // "New York Metro", "Chicago", "Los Angeles"
   country: v.string(), // "USA", "UK", "Canada"
   isActive: v.boolean(), // Can deactivate markets airline no longer serves

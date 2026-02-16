@@ -12,14 +12,14 @@ export default async function BookingsPage() {
   }
 
   const token = (await getToken({ template: 'convex' })) ?? '';
-  const preloadedBookings = await preloadQuery(
-    api.functions.bookings.listMyBookings,
+  const preloadedHotels = await preloadQuery(
+    api.functions.hotels.listMyHotels,
     {},
     { token }
   );
 
   return (
-    <BookingsContextProvider preloadedBookings={preloadedBookings}>
+    <BookingsContextProvider preloadedHotels={preloadedHotels}>
       <BookingsClientPage />
     </BookingsContextProvider>
   );

@@ -3,7 +3,7 @@
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { SheetFooter } from '@/components/ui/sheet';
 import { api } from '@/convex/_generated/api';
-import { CountryCombobox } from '@/modules/countries';
+import { CountryCombobox } from '@/modules/countries/CountryCombobox';
 import { Button, Input, Sheet } from '@/stories';
 import { useMutation, useQuery } from 'convex/react';
 import { useCallback, useEffect, useState } from 'react';
