@@ -1,8 +1,12 @@
-import { currentUser } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 import LandingPageClient from './ClientPage';
 
 export default async function LandingPage() {
-  const user = await currentUser();
+  const { isAuthenticated } = await auth();
+  if (!isAuthenticated) {
+    redirect('/sign-in');
+  }
 
   return <LandingPageClient />;
 }
