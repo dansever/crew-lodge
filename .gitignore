@@ -45,3 +45,6 @@ storybook-static
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Mastra local database (LibSQL/SQLite)
+src/mastra/public/*.db*
