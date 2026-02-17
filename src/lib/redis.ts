@@ -28,8 +28,8 @@
  * @module redis-cache
  */
 
-import { logger } from "@/utils/logger";
-import { Redis } from "@upstash/redis";
+import { logger } from '@/utils/logger';
+import { Redis } from '@upstash/redis';
 
 const redis = Redis.fromEnv();
 
@@ -41,10 +41,10 @@ const inflightRequests = new Map<string, Promise<any>>();
  * @example shortKey("user:123:token") → "user:123:...ken"
  */
 const shortKey = (key: string, visibleEnd = 3): string => {
-  const parts = key.split(":");
+  const parts = key.split(':');
   if (parts.length < 3) return key;
-  const prefix = parts.slice(0, 2).join(":");
-  const last = parts.at(-1) ?? "";
+  const prefix = parts.slice(0, 2).join(':');
+  const last = parts.at(-1) ?? '';
   const suffix = last.slice(-visibleEnd);
   return `${prefix}:...${suffix}`;
 };
@@ -60,11 +60,11 @@ export async function getCache<T>(key: string): Promise<T | null> {
   try {
     const cached = await redis.get<T>(key);
     if (cached !== null) {
-      logger.debug(`Cache hit: ${shortKey(key)}`, "redis");
+      logger.debug(`Cache hit: ${shortKey(key)}`, 'redis');
     }
     return cached;
   } catch (error) {
-    logger.error(`Get failed for ${shortKey(key)}: ${error}`, "redis");
+    logger.error(`Get failed for ${shortKey(key)}: ${error}`, 'redis');
     return null;
   }
 }
@@ -80,13 +80,13 @@ export async function getCache<T>(key: string): Promise<T | null> {
 export async function setCache<T>(
   key: string,
   data: T,
-  ttl: number,
+  ttl: number
 ): Promise<void> {
   try {
     await redis.set(key, data, { ex: ttl });
-    logger.debug(`Cache set: ${shortKey(key)} (TTL: ${ttl}s)`, "redis");
+    logger.debug(`Cache set: ${shortKey(key)} (TTL: ${ttl}s)`, 'redis');
   } catch (error) {
-    logger.error(`Set failed for ${shortKey(key)}: ${error}`, "redis");
+    logger.error(`Set failed for ${shortKey(key)}: ${error}`, 'redis');
   }
 }
 
@@ -99,9 +99,9 @@ export async function setCache<T>(
 export async function deleteCache(key: string): Promise<void> {
   try {
     await redis.del(key);
-    logger.debug(`Cache deleted: ${shortKey(key)}`, "redis");
+    logger.debug(`Cache deleted: ${shortKey(key)}`, 'redis');
   } catch (error) {
-    logger.error(`Delete failed for ${shortKey(key)}: ${error}`, "redis");
+    logger.error(`Delete failed for ${shortKey(key)}: ${error}`, 'redis');
   }
 }
 
@@ -118,11 +118,11 @@ export async function deleteCachePattern(pattern: string): Promise<void> {
       await redis.del(...keys);
       logger.debug(
         `Cache deleted: ${keys.length} keys matching ${pattern}`,
-        "redis",
+        'redis'
       );
     }
   } catch (error) {
-    logger.error(`Delete pattern failed for ${pattern}: ${error}`, "redis");
+    logger.error(`Delete pattern failed for ${pattern}: ${error}`, 'redis');
   }
 }
 
@@ -137,7 +137,7 @@ export async function hasCache(key: string): Promise<boolean> {
   try {
     return (await redis.exists(key)) === 1;
   } catch (error) {
-    logger.error(`Exists check failed for ${shortKey(key)}: ${error}`, "redis");
+    logger.error(`Exists check failed for ${shortKey(key)}: ${error}`, 'redis');
     return false;
   }
 }
@@ -153,17 +153,17 @@ export async function hasCache(key: string): Promise<boolean> {
  */
 export async function incrementCache(
   key: string,
-  ttl: number,
+  ttl: number
 ): Promise<number> {
   try {
     const count = await redis.incr(key);
     if (count === 1) {
       await redis.expire(key, ttl);
     }
-    logger.debug(`Counter incremented: ${shortKey(key)} = ${count}`, "redis");
+    logger.debug(`Counter incremented: ${shortKey(key)} = ${count}`, 'redis');
     return count;
   } catch (error) {
-    logger.error(`Increment failed for ${shortKey(key)}: ${error}`, "redis");
+    logger.error(`Increment failed for ${shortKey(key)}: ${error}`, 'redis');
     return 0;
   }
 }
@@ -189,7 +189,7 @@ export async function incrementCache(
 export async function getOrSet<T>(
   key: string,
   fetchFn: () => Promise<T>,
-  ttl: number,
+  ttl: number
 ): Promise<T> {
   // Check cache first
   const cached = await getCache<T>(key);
@@ -198,14 +198,14 @@ export async function getOrSet<T>(
   // Check for in-flight request
   const inFlight = inflightRequests.get(key);
   if (inFlight) {
-    logger.debug(`Waiting for in-flight request: ${shortKey(key)}`, "redis");
+    logger.debug(`Waiting for in-flight request: ${shortKey(key)}`, 'redis');
     return inFlight as Promise<T>;
   }
 
   // Create and track new fetch request
   const fetchPromise = (async () => {
     try {
-      logger.debug(`Cache miss, fetching: ${shortKey(key)}`, "redis");
+      logger.debug(`Cache miss, fetching: ${shortKey(key)}`, 'redis');
       const data = await fetchFn();
       await setCache(key, data, ttl);
       return data;

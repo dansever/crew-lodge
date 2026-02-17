@@ -62,10 +62,7 @@ async function loadAirports(): Promise<AirportDatasetItem[]> {
     }
 
     const csvText = await response.text();
-    logger.info(
-      'Successfully loaded CSV, length:',
-      csvText.length
-    );
+    logger.info('Successfully loaded CSV, length:', csvText.length);
     const lines = csvText.split('\n').filter(line => line.trim());
 
     // Skip header row

@@ -1,22 +1,22 @@
-import { Button as ButtonShadcn } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
-import { buttonStyles } from "./styles";
+import { Button as ButtonShadcn } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
+import { cn } from '@/lib/utils';
+import { LucideIcon } from 'lucide-react';
+import { buttonStyles } from './styles';
 
-export type ButtonSize = "xs" | "sm" | "md" | "lg";
-export type ButtonType = "button" | "submit" | "reset";
-export type ButtonIconPosition = "left" | "right";
+export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
+export type ButtonType = 'button' | 'submit' | 'reset';
+export type ButtonIconPosition = 'left' | 'right';
 export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "outline"
-  | "ghost"
-  | "link"
-  | "success"
-  | "warning"
-  | "danger"
-  | "dangerOutline";
+  | 'primary'
+  | 'secondary'
+  | 'outline'
+  | 'ghost'
+  | 'link'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'dangerOutline';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -39,31 +39,31 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 // Helpers
 export const getIconSizeClass = (size?: ButtonSize) => {
   switch (size) {
-    case "xs":
-      return "size-3";
-    case "sm":
-      return "size-4";
-    case "lg":
-      return "size-5";
-    case "md":
+    case 'xs':
+      return 'size-3';
+    case 'sm':
+      return 'size-4';
+    case 'lg':
+      return 'size-5';
+    case 'md':
     default:
-      return "size-4.5";
+      return 'size-4.5';
   }
 };
 
 export function Button({
-  variant = "primary",
-  size = "md",
+  variant = 'primary',
+  size = 'md',
   text,
   icon: Icon,
-  iconPosition = "left",
+  iconPosition = 'left',
   iconClassName,
   loading = false,
   disabled = false,
   onClick,
   className,
   ariaLabel,
-  type = "button",
+  type = 'button',
   children,
   asChild = false,
   ...props
@@ -89,10 +89,10 @@ export function Button({
       asChild={asChild}
       {...props}
     >
-      {iconPosition === "left" && iconNode}
+      {iconPosition === 'left' && iconNode}
       {text}
       {children}
-      {iconPosition === "right" && iconNode}
+      {iconPosition === 'right' && iconNode}
     </ButtonShadcn>
   );
 }

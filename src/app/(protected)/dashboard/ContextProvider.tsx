@@ -3,14 +3,11 @@
 import { api } from '@/convex/_generated/api';
 import type { DashboardData } from '@/convex/functions/aggregates/dashboard';
 import { Preloaded, usePreloadedQuery } from 'convex/react';
-import {
-  createContext,
-  useContext,
-  useMemo,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
-export type PreloadedDashboard = Preloaded<typeof api.functions.aggregates.dashboard.getDashboard>;
+export type PreloadedDashboard = Preloaded<
+  typeof api.functions.aggregates.dashboard.getDashboard
+>;
 
 interface DashboardContextValue {
   /** Dashboard data; undefined when loading */
@@ -61,7 +58,9 @@ export function DashboardContextProvider({
   }, [data]);
 
   return (
-    <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>
+    <DashboardContext.Provider value={value}>
+      {children}
+    </DashboardContext.Provider>
   );
 }
 

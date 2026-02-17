@@ -1,22 +1,22 @@
 // src/content/landingPageContent.ts
 
 export const title = {
-  value: "CrewLodge",
+  value: 'CrewLodge',
 };
 
 export const hero = {
-  titlePlain: "Crew Accommodation",
-  titleHighlight: "Optimized by AI",
+  titlePlain: 'Crew Accommodation',
+  titleHighlight: 'Optimized by AI',
   subtitle:
-    "Automate hotel sourcing, reduce crew layover costs, and recover from flight disruptions in minutes—not hours.",
-  ctaPrimary: "Request Demo",
-  ctaSecondary: "View Features",
+    'Automate hotel sourcing, reduce crew layover costs, and recover from flight disruptions in minutes—not hours.',
+  ctaPrimary: 'Request Demo',
+  ctaSecondary: 'View Features',
 };
 
 export const footer = {
-  copyright: "CrewLodge. All rights reserved.",
+  copyright: 'CrewLodge. All rights reserved.',
   links: [
-    { label: "Terms", href: "#" },
-    { label: "Privacy", href: "#" },
+    { label: 'Terms', href: '#' },
+    { label: 'Privacy', href: '#' },
   ],
 };

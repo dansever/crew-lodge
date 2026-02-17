@@ -16,11 +16,11 @@
  */
 export function formatCompactNumber(
   number: number,
-  locale: string = "en-US",
-  maximumFractionDigits: number = 1,
+  locale: string = 'en-US',
+  maximumFractionDigits: number = 1
 ): string {
   return new Intl.NumberFormat(locale, {
-    notation: "compact",
+    notation: 'compact',
     maximumFractionDigits,
   }).format(number);
 }
@@ -48,31 +48,31 @@ export function formatCompactNumber(
 export function formatDate(
   date: Date | string | number | null,
   options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
   },
-  locale: string = "en-US",
+  locale: string = 'en-US',
   useUTC: boolean = false,
-  includeTime: boolean = false,
+  includeTime: boolean = false
 ): string {
-  if (!date) return "";
+  if (!date) return '';
 
   let d: Date;
   let isDateOnly = false;
 
-  if (typeof date === "string") {
+  if (typeof date === 'string') {
     const s = date.trim();
 
     // Detect YYYY-MM-DD (date-only)
-    if (s.length === 10 && s[4] === "-" && s[7] === "-") {
+    if (s.length === 10 && s[4] === '-' && s[7] === '-') {
       isDateOnly = true;
-      const [y, m, dd] = s.split("-").map(Number);
+      const [y, m, dd] = s.split('-').map(Number);
       d = new Date(Date.UTC(y, m - 1, dd, 0, 0, 0, 0));
     } else {
       d = new Date(s);
     }
-  } else if (typeof date === "number") {
+  } else if (typeof date === 'number') {
     // Handle numeric timestamps
     // If the number is 10 digits, assume seconds and convert to milliseconds
     const isSeconds = date.toString().length === 10;
@@ -84,9 +84,9 @@ export function formatDate(
     d = new Date(date);
   }
 
-  if (!(d instanceof Date) || isNaN(d.getTime())) return "";
+  if (!(d instanceof Date) || isNaN(d.getTime())) return '';
 
-  const timeZone = isDateOnly ? "UTC" : useUTC ? "UTC" : undefined;
+  const timeZone = isDateOnly ? 'UTC' : useUTC ? 'UTC' : undefined;
 
   const formatOptions: Intl.DateTimeFormatOptions = {
     ...options,
@@ -94,8 +94,8 @@ export function formatDate(
   };
 
   if (includeTime) {
-    formatOptions.hour = "2-digit";
-    formatOptions.minute = "2-digit";
+    formatOptions.hour = '2-digit';
+    formatOptions.minute = '2-digit';
   }
 
   return d.toLocaleString(locale, formatOptions);
@@ -113,9 +113,9 @@ export function formatRelativeDate(date: Date | string | number): string {
   try {
     // Use dynamic import for date-fns to avoid SSR issues
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { formatRelative } = require("date-fns");
+    const { formatRelative } = require('date-fns');
     const dateObj =
-      typeof date === "string" || typeof date === "number"
+      typeof date === 'string' || typeof date === 'number'
         ? new Date(date)
         : date;
 
@@ -144,9 +144,9 @@ export function formatRelativeDate(date: Date | string | number): string {
  */
 export function formatDuration(
   milliseconds: number,
-  short: boolean = false,
+  short: boolean = false
 ): string {
-  if (milliseconds < 0) return "0s";
+  if (milliseconds < 0) return '0s';
 
   const seconds = Math.floor(milliseconds / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -156,27 +156,27 @@ export function formatDuration(
   const parts: string[] = [];
 
   if (days > 0) {
-    parts.push(`${days}${short ? "d" : ` day${days !== 1 ? "s" : ""}`}`);
+    parts.push(`${days}${short ? 'd' : ` day${days !== 1 ? 's' : ''}`}`);
   }
   if (hours % 24 > 0) {
     parts.push(
-      `${hours % 24}${short ? "h" : ` hour${hours % 24 !== 1 ? "s" : ""}`}`,
+      `${hours % 24}${short ? 'h' : ` hour${hours % 24 !== 1 ? 's' : ''}`}`
     );
   }
   if (minutes % 60 > 0) {
     parts.push(
-      `${minutes % 60}${short ? "m" : ` minute${minutes % 60 !== 1 ? "s" : ""}`}`,
+      `${minutes % 60}${short ? 'm' : ` minute${minutes % 60 !== 1 ? 's' : ''}`}`
     );
   }
   if (seconds % 60 > 0 && parts.length === 0) {
     parts.push(
-      `${seconds % 60}${short ? "s" : ` second${seconds % 60 !== 1 ? "s" : ""}`}`,
+      `${seconds % 60}${short ? 's' : ` second${seconds % 60 !== 1 ? 's' : ''}`}`
     );
   }
 
-  if (parts.length === 0) return short ? "0s" : "0 seconds";
+  if (parts.length === 0) return short ? '0s' : '0 seconds';
 
-  return short ? parts.join(" ") : parts.join(", ");
+  return short ? parts.join(' ') : parts.join(', ');
 }
 
 /**
@@ -193,19 +193,19 @@ export function formatDuration(
  */
 export function formatCurrency(
   amount?: number | string | null,
-  currency: string | null = "USD",
-  decimalPlaces: number = 0,
+  currency: string | null = 'USD',
+  decimalPlaces: number = 0
 ): string | null {
   if (amount == null) return null;
 
   const parsedAmount =
-    typeof amount === "number" ? amount : parseFloat(amount.toString());
+    typeof amount === 'number' ? amount : parseFloat(amount.toString());
   if (isNaN(parsedAmount)) return null;
 
-  const resolvedCurrency = currency?.toUpperCase() || "USD";
+  const resolvedCurrency = currency?.toUpperCase() || 'USD';
 
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
     currency: resolvedCurrency,
     maximumFractionDigits: decimalPlaces,
   }).format(parsedAmount);
@@ -225,7 +225,7 @@ export function formatCurrency(
 export function formatPercentage(
   value: number,
   decimalPlaces: number = 0,
-  isDecimal: boolean = false,
+  isDecimal: boolean = false
 ): string {
   const normalizedValue = isDecimal ? value * 100 : value;
   return `${normalizedValue.toFixed(decimalPlaces)}%`;
@@ -244,19 +244,19 @@ export function formatPercentage(
  */
 export function formatFileSize(
   size: number | null | undefined,
-  precision: number = 2,
+  precision: number = 2
 ): string {
   if (size == null || size < 0 || isNaN(size)) {
-    return "0 bytes";
+    return '0 bytes';
   }
 
   if (size === 0) {
-    return "0 bytes";
+    return '0 bytes';
   }
 
   const k = 1024;
   const dm = precision < 0 ? 0 : precision;
-  const sizes = ["bytes", "KB", "MB", "GB", "TB"];
+  const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB'];
 
   const i = Math.floor(Math.log(size) / Math.log(k));
   const unitIndex = Math.min(i, sizes.length - 1);
@@ -276,29 +276,29 @@ export function formatFileSize(
  * formatToTitleCase("hello_world_and_friends") → "Hello World and Friends"
  */
 export function formatToTitleCase(text: string | null | undefined): string {
-  if (!text) return "Unknown";
+  if (!text) return 'Unknown';
 
   const lowerCaseExceptions = [
-    "a",
-    "an",
-    "the",
-    "and",
-    "or",
-    "but",
-    "as",
-    "if",
+    'a',
+    'an',
+    'the',
+    'and',
+    'or',
+    'but',
+    'as',
+    'if',
   ];
 
   return text
     .trim()
-    .replace(/[_-]+/g, " ")
-    .split(" ")
+    .replace(/[_-]+/g, ' ')
+    .split(' ')
     .map((word, i) => {
       const lower = word.toLowerCase();
       if (i !== 0 && lowerCaseExceptions.includes(lower)) return lower;
       return lower.charAt(0).toUpperCase() + lower.slice(1);
     })
-    .join(" ");
+    .join(' ');
 }
 
 /**
@@ -315,7 +315,7 @@ export function formatToTitleCase(text: string | null | undefined): string {
 export function truncateText(
   text: string,
   maxLength: number = 50,
-  ellipsis: string = "...",
+  ellipsis: string = '...'
 ): string {
   if (!text || text.length <= maxLength) return text;
   return text.slice(0, maxLength) + ellipsis;
@@ -335,9 +335,9 @@ export function truncateText(
 export function maskValue(
   value: string,
   visibleCount: number = 3,
-  maskChar: string = "•",
+  maskChar: string = '•'
 ): string {
-  if (!value) return "";
+  if (!value) return '';
   const visible = value.slice(0, visibleCount);
   const hidden = maskChar.repeat(5);
   return visible + hidden;
@@ -383,7 +383,7 @@ export function pluralize(
   count: number,
   singular: string,
   plural?: string,
-  includeCount: boolean = true,
+  includeCount: boolean = true
 ): string {
   const word = count === 1 ? singular : plural || `${singular}s`;
   return includeCount ? `${count} ${word}` : word;

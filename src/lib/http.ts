@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 /**
  * Axios instance for making HTTP requests
@@ -6,10 +6,10 @@ import axios from "axios";
  * @returns Axios instance
  */
 const http = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "/api",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || '/api',
   timeout: 10000,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -20,14 +20,14 @@ const http = axios.create({
  * @throws An error if the request fails
  */
 http.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("authToken");
+  config => {
+    const token = localStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error),
+  error => Promise.reject(error)
 );
 
 /**
@@ -36,8 +36,8 @@ http.interceptors.request.use(
  * @returns The response from the API
  */
 http.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  response => response,
+  async error => {
     if (!axios.isAxiosError(error)) {
       return Promise.reject(error);
     }
@@ -47,20 +47,20 @@ http.interceptors.response.use(
     // Handle specific error cases
     if (status === 401) {
       // Token expired or invalid - redirect to login
-      localStorage.removeItem("authToken");
-      window.location.href = "/login";
+      localStorage.removeItem('authToken');
+      window.location.href = '/login';
     }
 
     if (status === 403) {
-      console.error("Permission denied");
+      console.error('Permission denied');
     }
 
     if (status && status >= 500) {
-      console.error("Server error:", error.response?.data);
+      console.error('Server error:', error.response?.data);
     }
 
     // Log for debugging
-    console.error("API error:", {
+    console.error('API error:', {
       url: error.config?.url,
       method: error.config?.method,
       status,
@@ -68,7 +68,7 @@ http.interceptors.response.use(
     });
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default http;

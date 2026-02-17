@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { motion } from "motion/react";
+import { motion } from 'motion/react';
 import {
   ComponentPropsWithoutRef,
   useCallback,
@@ -8,11 +8,11 @@ import {
   useId,
   useRef,
   useState,
-} from "react";
+} from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
-export interface AnimatedGridPatternProps extends ComponentPropsWithoutRef<"svg"> {
+export interface AnimatedGridPatternProps extends ComponentPropsWithoutRef<'svg'> {
   width?: number;
   height?: number;
   x?: number;
@@ -63,12 +63,12 @@ export function AnimatedGridPattern({
         iteration: 0,
       }));
     },
-    [getPos],
+    [getPos]
   );
 
   const updateSquarePosition = useCallback(
     (squareId: number) => {
-      setSquares((currentSquares) => {
+      setSquares(currentSquares => {
         const current = currentSquares[squareId];
         if (!current || current.id !== squareId) return currentSquares;
 
@@ -82,7 +82,7 @@ export function AnimatedGridPattern({
         return nextSquares;
       });
     },
-    [getPos],
+    [getPos]
   );
 
   useEffect(() => {
@@ -95,9 +95,9 @@ export function AnimatedGridPattern({
     const element = containerRef.current;
     if (!element) return;
 
-    const resizeObserver = new ResizeObserver((entries) => {
+    const resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
-        setDimensions((currentDimensions) => {
+        setDimensions(currentDimensions => {
           const nextWidth = entry.contentRect.width;
           const nextHeight = entry.contentRect.height;
           if (
@@ -123,8 +123,8 @@ export function AnimatedGridPattern({
       ref={containerRef}
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute inset-0 h-full w-full fill-gray-400/30 stroke-gray-400/30",
-        className,
+        'pointer-events-none absolute inset-0 h-full w-full fill-gray-400/30 stroke-gray-400/30',
+        className
       )}
       {...props}
     >
@@ -154,7 +154,7 @@ export function AnimatedGridPattern({
               duration,
               repeat: 1,
               delay: index * 0.1,
-              repeatType: "reverse",
+              repeatType: 'reverse',
               repeatDelay,
             }}
             onAnimationComplete={() => updateSquarePosition(id)}

@@ -31,7 +31,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
         <TooltipProvider delayDuration={0}>
           <MarketProvider>
-            <CopilotKit runtimeUrl="/api/copilotkit" agent="getHotelInfoAgent">
+            <CopilotKit
+              runtimeUrl="/api/copilotkit"
+              agent="crew-lodge-assistant-agent"
+              showDevConsole={false}
+            >
               {children}
               <CopilotSidebar />
               <Toaster />

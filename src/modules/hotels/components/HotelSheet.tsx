@@ -451,51 +451,51 @@ export function HotelSheet({
                   />
                 </DataField>
                 <div className="grid grid-cols-2 gap-3">
-                <DataField label="Street">
-                  <Input
-                    placeholder="Street address"
-                    value={form.street}
-                    onChange={e =>
-                      setForm(f => ({ ...f, street: e.target.value }))
-                    }
-                  />
-                </DataField>
-                <DataField label="City">
-                  <Input
-                    placeholder="City"
-                    value={form.city}
-                    onChange={e =>
-                      setForm(f => ({ ...f, city: e.target.value }))
-                    }
-                  />
-                </DataField>
-                <DataField label="State/Region">
-                  <Input
-                    placeholder="State"
-                    value={form.state}
-                    onChange={e =>
-                      setForm(f => ({ ...f, state: e.target.value }))
-                    }
-                  />
-                </DataField>
-                <DataField label="Postal code">
-                  <Input
-                    placeholder="Postal code"
-                    value={form.postalCode}
-                    onChange={e =>
-                      setForm(f => ({ ...f, postalCode: e.target.value }))
-                    }
-                  />
-                </DataField>
-                <DataField label="Country *">
-                  <Input
-                    placeholder="Country"
-                    value={form.country}
-                    onChange={e =>
-                      setForm(f => ({ ...f, country: e.target.value }))
-                    }
-                  />
-                </DataField>
+                  <DataField label="Street">
+                    <Input
+                      placeholder="Street address"
+                      value={form.street}
+                      onChange={e =>
+                        setForm(f => ({ ...f, street: e.target.value }))
+                      }
+                    />
+                  </DataField>
+                  <DataField label="City">
+                    <Input
+                      placeholder="City"
+                      value={form.city}
+                      onChange={e =>
+                        setForm(f => ({ ...f, city: e.target.value }))
+                      }
+                    />
+                  </DataField>
+                  <DataField label="State/Region">
+                    <Input
+                      placeholder="State"
+                      value={form.state}
+                      onChange={e =>
+                        setForm(f => ({ ...f, state: e.target.value }))
+                      }
+                    />
+                  </DataField>
+                  <DataField label="Postal code">
+                    <Input
+                      placeholder="Postal code"
+                      value={form.postalCode}
+                      onChange={e =>
+                        setForm(f => ({ ...f, postalCode: e.target.value }))
+                      }
+                    />
+                  </DataField>
+                  <DataField label="Country *">
+                    <Input
+                      placeholder="Country"
+                      value={form.country}
+                      onChange={e =>
+                        setForm(f => ({ ...f, country: e.target.value }))
+                      }
+                    />
+                  </DataField>
                 </div>
               </div>
             )}

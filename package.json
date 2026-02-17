@@ -36,7 +36,6 @@
     "@mastra/loggers": "^1.0.1",
     "@mastra/memory": "^1.2.0",
     "@mastra/observability": "^1.2.0",
-    "@svar-ui/react-gantt": "^2.5.2",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@tavily/core": "^0.7.1",
     "@uidotdev/usehooks": "^2.4.1",
@@ -80,7 +79,7 @@
   "devDependencies": {
     "@storybook/nextjs-vite": "^10.2.8",
     "@tailwindcss/postcss": "^4",
-    "@types/google.maps": "^3.58.1",
+    "@types/google.maps": "^1.51.3",
     "@types/node": "^20",
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19",

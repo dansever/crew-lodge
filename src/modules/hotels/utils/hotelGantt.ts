@@ -1,4 +1,7 @@
-import type { GanttFeature, GanttStatus } from '@/components/ui/shadcn-io/gantt';
+import type {
+  GanttFeature,
+  GanttStatus,
+} from '@/components/ui/shadcn-io/gantt';
 import type { Booking, Hotel } from '@/convex/types';
 
 export const bookingStatuses: GanttStatus[] = [

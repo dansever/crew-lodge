@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 let cachedMap: Record<string, string> | null = null;
 let isLoadingCache = false;
@@ -11,7 +11,7 @@ async function loadCountryMap(): Promise<Record<string, string>> {
   }
 
   if (isLoadingCache) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const checkInterval = setInterval(() => {
         if (cachedMap) {
           clearInterval(checkInterval);
@@ -24,12 +24,12 @@ async function loadCountryMap(): Promise<Record<string, string>> {
   isLoadingCache = true;
 
   try {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return {};
     }
 
-    const response = await fetch("/datasets/countries.csv", {
-      cache: "force-cache",
+    const response = await fetch('/datasets/countries.csv', {
+      cache: 'force-cache',
     });
 
     if (!response.ok) {
@@ -39,14 +39,14 @@ async function loadCountryMap(): Promise<Record<string, string>> {
     }
 
     const csvText = await response.text();
-    const lines = csvText.split("\n").filter((line) => line.trim());
+    const lines = csvText.split('\n').filter(line => line.trim());
 
     // Skip header row (country,name)
     const dataLines = lines.slice(1);
 
     const map: Record<string, string> = {};
     for (const line of dataLines) {
-      const commaIndex = line.indexOf(",");
+      const commaIndex = line.indexOf(',');
       if (commaIndex === -1) continue;
 
       const country = line.slice(0, commaIndex).trim();
@@ -71,7 +71,7 @@ export function useCountryMap() {
 
   useEffect(() => {
     loadCountryMap()
-      .then((loadedMap) => {
+      .then(loadedMap => {
         setMap(loadedMap);
       })
       .finally(() => {

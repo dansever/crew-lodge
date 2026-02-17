@@ -1,18 +1,18 @@
-import { Spinner } from "@/components/ui/spinner";
-import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
-import * as React from "react";
+import { Spinner } from '@/components/ui/spinner';
+import { cn } from '@/lib/utils';
+import { LucideIcon } from 'lucide-react';
+import * as React from 'react';
 import {
   ButtonIconPosition,
   ButtonSize,
   ButtonVariant,
   getIconSizeClass,
-} from "./Button";
-import { buttonStyles } from "./styles";
+} from './Button';
+import { buttonStyles } from './styles';
 
 export interface ButtonTriggerProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
-  "onClick" | "onKeyDown"
+  'onClick' | 'onKeyDown'
 > {
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -22,10 +22,10 @@ export interface ButtonTriggerProps extends Omit<
   loading?: boolean;
   disabled?: boolean;
   ariaLabel?: string;
-  as?: "div" | "span"; // HTML element to render as (default: "div")
+  as?: 'div' | 'span'; // HTML element to render as (default: "div")
   onClick?: (e: React.MouseEvent<HTMLDivElement | HTMLSpanElement>) => void;
   onKeyDown?: (
-    e: React.KeyboardEvent<HTMLDivElement | HTMLSpanElement>,
+    e: React.KeyboardEvent<HTMLDivElement | HTMLSpanElement>
   ) => void;
   children?: React.ReactNode;
 }
@@ -36,16 +36,16 @@ export interface ButtonTriggerProps extends Omit<
  * (e.g., when it's inside another button, which is invalid HTML).
  */
 export function ButtonTrigger({
-  variant = "primary",
-  size = "md",
+  variant = 'primary',
+  size = 'md',
   text,
   icon: Icon,
-  iconPosition = "left",
+  iconPosition = 'left',
   loading = false,
   disabled = false,
   className,
   ariaLabel,
-  as = "div",
+  as = 'div',
   onClick,
   onKeyDown,
   children,
@@ -58,17 +58,17 @@ export function ButtonTrigger({
   const isIconOnly = !displayContent && (hasIcon || loading);
 
   // Validate accessibility for icon-only triggers
-  if (isIconOnly && !ariaLabel && !props["aria-label"]) {
+  if (isIconOnly && !ariaLabel && !props['aria-label']) {
     console.warn(
-      "ButtonTrigger: Icon-only triggers should have an ariaLabel prop for accessibility",
+      'ButtonTrigger: Icon-only triggers should have an ariaLabel prop for accessibility'
     );
   }
 
   const ariaAttributes = {
-    "aria-label": ariaLabel || props["aria-label"],
-    "aria-busy": loading ? true : undefined,
-    "aria-disabled": isDisabled ? true : undefined,
-    role: props.role || "button",
+    'aria-label': ariaLabel || props['aria-label'],
+    'aria-busy': loading ? true : undefined,
+    'aria-disabled': isDisabled ? true : undefined,
+    role: props.role || 'button',
     tabIndex: isDisabled ? -1 : (props.tabIndex ?? 0),
   };
 
@@ -80,14 +80,14 @@ export function ButtonTrigger({
 
   const content = (
     <>
-      {iconPosition === "left" && iconNode}
+      {iconPosition === 'left' && iconNode}
       {displayContent}
-      {iconPosition === "right" && iconNode}
+      {iconPosition === 'right' && iconNode}
     </>
   );
 
   const handleClick = (
-    e: React.MouseEvent<HTMLDivElement | HTMLSpanElement>,
+    e: React.MouseEvent<HTMLDivElement | HTMLSpanElement>
   ) => {
     if (isDisabled) {
       e.preventDefault();
@@ -98,14 +98,14 @@ export function ButtonTrigger({
   };
 
   const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement | HTMLSpanElement>,
+    e: React.KeyboardEvent<HTMLDivElement | HTMLSpanElement>
   ) => {
     if (isDisabled) {
       e.preventDefault();
       e.stopPropagation();
       return;
     }
-    if (e.key === "Enter" || e.key === " ") {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       if (onClick) {
         (e.currentTarget as HTMLElement).click();

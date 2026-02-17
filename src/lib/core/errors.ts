@@ -1,5 +1,5 @@
-import { logger } from "@/utils/logger";
-import { NextResponse } from "next/server";
+import { logger } from '@/utils/logger';
+import { NextResponse } from 'next/server';
 
 /*
   Returns a JSON response with an error message and status code.
@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
   - When you need to return an error response to the client.
 */
 export function jsonError(message: string, status = 400) {
-  logger.error(`${status} - ${message}`, "jsonError");
+  logger.error(`${status} - ${message}`, 'jsonError');
   return NextResponse.json({ error: message }, { status });
 }
 
@@ -18,5 +18,5 @@ export function jsonError(message: string, status = 400) {
  */
 export function asError(e: unknown): Error {
   if (e instanceof Error) return e;
-  return new Error(typeof e === "string" ? e : JSON.stringify(e));
+  return new Error(typeof e === 'string' ? e : JSON.stringify(e));
 }

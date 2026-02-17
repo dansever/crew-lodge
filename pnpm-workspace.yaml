@@ -3,7 +3,7 @@ ignoredBuiltDependencies:
   - unrs-resolver
 
 onlyBuiltDependencies:
-  - "@clerk/shared"
-  - "@scarf/scarf"
+  - '@clerk/shared'
+  - '@scarf/scarf'
   - esbuild
   - msw

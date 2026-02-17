@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Minus, TrendingDown, TrendingUp } from "lucide-react";
-import type { ReactNode } from "react";
-import React from "react";
+import { Card, CardContent } from '@/components/ui/card';
+import { Minus, TrendingDown, TrendingUp } from 'lucide-react';
+import type { ReactNode } from 'react';
+import React from 'react';
 
 interface KpiCardProps {
   title: string;
@@ -14,7 +14,7 @@ interface KpiCardProps {
     label?: string; // e.g., "vs last month"
   };
   icon: ReactNode;
-  variant?: "default" | "success" | "warning" | "info";
+  variant?: 'default' | 'success' | 'warning' | 'info';
 }
 
 export function KpiCard({
@@ -23,45 +23,45 @@ export function KpiCard({
   unit,
   trend,
   icon,
-  variant = "default",
+  variant = 'default',
 }: KpiCardProps) {
   // Modern AI-themed variant styles with better contrast and glow effects
   const variantStyles = {
     default: {
-      card: "text-primary bg-white/40 backdrop-blur-md border-white/20 shadow-lg dark:text-white dark:bg-transparent dark:border-white/20",
-      icon: "text-primary bg-gradient-to-br bg-indigo-300 to-indigo-200 dark:bg-indigo-600 dark:from-indigo-600 dark:to-indigo-400",
+      card: 'text-primary bg-white/40 backdrop-blur-md border-white/20 shadow-lg dark:text-white dark:bg-transparent dark:border-white/20',
+      icon: 'text-primary bg-gradient-to-br bg-indigo-300 to-indigo-200 dark:bg-indigo-600 dark:from-indigo-600 dark:to-indigo-400',
     },
     success: {
-      card: "text-white from-emerald-400 to-emerald-200 border-emerald-400/40",
-      icon: "text-white bg-emerald-500 text-emerald-950 shadow-lg",
+      card: 'text-white from-emerald-400 to-emerald-200 border-emerald-400/40',
+      icon: 'text-white bg-emerald-500 text-emerald-950 shadow-lg',
     },
     warning: {
-      card: "text-white from-orange-400 to-orange-200 border-orange-400/40",
-      icon: "text-white bg-orange-500 text-orange-950 shadow-lg",
+      card: 'text-white from-orange-400 to-orange-200 border-orange-400/40',
+      icon: 'text-white bg-orange-500 text-orange-950 shadow-lg',
     },
     info: {
-      card: "text-white from-cyan-400 to-cyan-200 border-cyan-400/40",
-      icon: "text-white bg-cyan-500 text-cyan-950 shadow-lg",
+      card: 'text-white from-cyan-400 to-cyan-200 border-cyan-400/40',
+      icon: 'text-white bg-cyan-500 text-cyan-950 shadow-lg',
     },
   };
   const trendDirection = trend
     ? trend.value > 0
-      ? "up"
+      ? 'up'
       : trend.value < 0
-        ? "down"
-        : "neutral"
+        ? 'down'
+        : 'neutral'
     : null;
   const trendColor =
-    trendDirection === "up"
-      ? "text-emerald-400"
-      : trendDirection === "down"
-        ? "text-red-400"
-        : "text-slate-400";
+    trendDirection === 'up'
+      ? 'text-emerald-400'
+      : trendDirection === 'down'
+        ? 'text-red-400'
+        : 'text-slate-400';
 
   const TrendIcon =
-    trendDirection === "up"
+    trendDirection === 'up'
       ? TrendingUp
-      : trendDirection === "down"
+      : trendDirection === 'down'
         ? TrendingDown
         : Minus;
 
@@ -79,8 +79,8 @@ export function KpiCard({
               {React.cloneElement(
                 icon as React.ReactElement<{ className?: string }>,
                 {
-                  className: "h-5 w-5",
-                },
+                  className: 'h-5 w-5',
+                }
               )}
             </div>
             <h3 className="text-sm font-medium">{title}</h3>
@@ -93,7 +93,7 @@ export function KpiCard({
             >
               <TrendIcon className="h-3 w-3" />
               <span className="text-xs font-semibold">
-                {trend.value > 0 ? "+" : ""}
+                {trend.value > 0 ? '+' : ''}
                 {trend.value}%
               </span>
             </div>

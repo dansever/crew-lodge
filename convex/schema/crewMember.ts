@@ -1,11 +1,11 @@
-import { defineTable } from "convex/server";
-import { v } from "convex/values";
-import { updatedAtValidator } from "./common";
+import { defineTable } from 'convex/server';
+import { v } from 'convex/values';
+import { updatedAtValidator } from './common';
 
 /* -------------------- Crew Members -------------------- */
 export const crewMembers = defineTable({
   // identifiers
-  orgId: v.id("orgs"),
+  orgId: v.id('orgs'),
 
   // data
   name: v.string(),
@@ -20,6 +20,6 @@ export const crewMembers = defineTable({
 
   updatedAt: updatedAtValidator,
 })
-  .index("by_org_id", ["orgId"])
-  .index("by_email", ["email"])
-  .index("by_passport_number", ["passportNumber"]);
+  .index('by_org_id', ['orgId'])
+  .index('by_email', ['email'])
+  .index('by_passport_number', ['passportNumber']);

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 /**
  * Smoothly scrolls to the specified element ID
@@ -8,8 +8,8 @@ export const scrollToSection = (elementId: string): void => {
   const element = document.getElementById(elementId);
   if (element) {
     element.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
+      behavior: 'smooth',
+      block: 'start',
     });
   }
 };
@@ -20,7 +20,7 @@ export const scrollToSection = (elementId: string): void => {
 export const scrollToTop = (): void => {
   window.scrollTo({
     top: 0,
-    behavior: "smooth",
+    behavior: 'smooth',
   });
 };
 
@@ -31,11 +31,11 @@ export const scrollToTop = (): void => {
  */
 export const handleSmoothScroll = (
   e: React.MouseEvent<HTMLAnchorElement>,
-  sectionId: string,
+  sectionId: string
 ): void => {
   e.preventDefault();
   scrollToSection(sectionId);
 
   // Update URL without causing a page reload
-  window.history.pushState({}, "", `#${sectionId}`);
+  window.history.pushState({}, '', `#${sectionId}`);
 };

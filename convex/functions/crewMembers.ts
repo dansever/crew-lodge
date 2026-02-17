@@ -44,11 +44,14 @@ export const createCrewMember = mutation({
   args: { crewMember: crewMemberValidator },
   handler: async (ctx, args): Promise<CrewMemberId> => {
     const orgId = await ctx.runQuery(internal.functions.orgs.getMyOrgId);
-    const crewMember = await ctx.runMutation(internal.functions.crewMembers.create, {
-      ...args.crewMember,
-      orgId,
-      updatedAt: Date.now(),
-    });
+    const crewMember = await ctx.runMutation(
+      internal.functions.crewMembers.create,
+      {
+        ...args.crewMember,
+        orgId,
+        updatedAt: Date.now(),
+      }
+    );
     return crewMember._id;
   },
 });

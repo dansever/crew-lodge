@@ -9,9 +9,9 @@ This rule defines how to structure Convex functions and where to place different
 
 ## Atomic vs Aggregate Separation
 
-| Location | Purpose | Examples |
-|----------|---------|----------|
-| `convex/functions/<entity>.ts` | Single-table CRUD, get-by-id, list-by-org | `listMyHotels`, `getHotelById`, `createHotel` |
+| Location                                | Purpose                                   | Examples                                                           |
+| --------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------ |
+| `convex/functions/<entity>.ts`          | Single-table CRUD, get-by-id, list-by-org | `listMyHotels`, `getHotelById`, `createHotel`                      |
 | `convex/functions/aggregates/<page>.ts` | Cross-table, page-specific composite data | `getDashboard`, `getDisruptionsPageData`, `getCrewMembersPageData` |
 
 **Rule of thumb:** Entity modules = one table, one responsibility. Aggregates = cross-table, page-specific views.

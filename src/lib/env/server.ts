@@ -2,18 +2,18 @@
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
-// Detect if we're running in Mastra dev server context
-// Mastra runs from .mastra directory or sets MASTRA_DEV env var
-const isMastraContext =
-  typeof process !== 'undefined' &&
-  (process.env.MASTRA_DEV === 'true' ||
-    process.env.SKIP_ENV_VALIDATION === 'true' ||
-    process.cwd().includes('.mastra') ||
-    process.argv.some(arg => arg.includes('mastra')));
+// // Detect if we're running in Mastra dev server context
+// // Mastra runs from .mastra directory or sets MASTRA_DEV env var
+// const isMastraContext =
+//   typeof process !== 'undefined' &&
+//   (process.env.MASTRA_DEV === 'true' ||
+//     process.env.SKIP_ENV_VALIDATION === 'true' ||
+//     process.cwd().includes('.mastra') ||
+//     process.argv.some(arg => arg.includes('mastra')));
 
 export const serverEnv = createEnv({
   emptyStringAsUndefined: true,
-  skipValidation: isMastraContext, // Skip validation in Mastra context
+  // skipValidation: isMastraContext, // Skip validation in Mastra context
   server: {
     // Environments
     NODE_ENV: z.enum(['development', 'production']).default('development'),

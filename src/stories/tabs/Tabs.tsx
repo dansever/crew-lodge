@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import { useEffect, useRef, useState } from "react";
+import { Card, CardContent } from '@/components/ui/card';
+import { useEffect, useRef, useState } from 'react';
 
 interface TabsProps {
   tabs: {
@@ -13,7 +13,7 @@ interface TabsProps {
   value?: string; // Controlled: current active tab value
   defaultValue?: string; // Uncontrolled: initial tab value
   onValueChange?: (value: string) => void; // Callback when tab changes
-  variant?: "default" | "secondary";
+  variant?: 'default' | 'secondary';
 }
 
 export function Tabs({
@@ -21,21 +21,21 @@ export function Tabs({
   value,
   defaultValue,
   onValueChange,
-  variant = "default",
+  variant = 'default',
 }: TabsProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [internalActiveIndex, setInternalActiveIndex] = useState(
-    defaultValue ? tabs.findIndex((tab) => tab.value === defaultValue) : 0,
+    defaultValue ? tabs.findIndex(tab => tab.value === defaultValue) : 0
   );
   const [hoverStyle, setHoverStyle] = useState({});
-  const [activeStyle, setActiveStyle] = useState({ left: "0px", width: "0px" });
+  const [activeStyle, setActiveStyle] = useState({ left: '0px', width: '0px' });
   const [isDarkMode] = useState(false);
   const tabRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Determine active index from controlled value or internal state
   const activeIndex =
     value !== undefined
-      ? tabs.findIndex((tab) => tab.value === value)
+      ? tabs.findIndex(tab => tab.value === value)
       : internalActiveIndex;
 
   const handleTabClick = (index: number) => {
@@ -92,16 +92,16 @@ export function Tabs({
 
   return (
     <div
-      className={`items-start flex flex-col w-full h-full min-h-0 ${isDarkMode ? "dark bg-[#0e0f11]" : ""}`}
+      className={`items-start flex flex-col w-full h-full min-h-0 ${isDarkMode ? 'dark bg-[#0e0f11]' : ''}`}
     >
       <Card
-        className={`w-full border-none shadow-none relative flex items-center justify-center pt-2 ${isDarkMode ? "bg-transparent" : ""}`}
+        className={`w-full border-none shadow-none relative flex items-center justify-center pt-2 ${isDarkMode ? 'bg-transparent' : ''}`}
       >
         <CardContent className="p-0 w-full">
           <div className="relative">
             {/* Hover Highlight */}
             <div
-              className={`absolute h-[30px] transition-all duration-300 ease-out ${variant === "secondary" ? "bg-orange-100" : "bg-[#0e0f1114] dark:bg-[#ffffff1a]"} rounded-[6px] flex items-center`}
+              className={`absolute h-[30px] transition-all duration-300 ease-out ${variant === 'secondary' ? 'bg-orange-100' : 'bg-[#0e0f1114] dark:bg-[#ffffff1a]'} rounded-[6px] flex items-center`}
               style={{
                 ...hoverStyle,
                 opacity: hoveredIndex !== null ? 1 : 0,
@@ -110,7 +110,7 @@ export function Tabs({
 
             {/* Active Indicator */}
             <div
-              className={`absolute bottom-[-6px] h-[2px] ${variant === "secondary" ? "bg-orange-300" : "bg-[#0e0f11]"} dark:bg-white transition-all duration-300 ease-out`}
+              className={`absolute bottom-[-6px] h-[2px] ${variant === 'secondary' ? 'bg-orange-300' : 'bg-[#0e0f11]'} dark:bg-white transition-all duration-300 ease-out`}
               style={activeStyle}
             />
 
@@ -119,12 +119,12 @@ export function Tabs({
               {tabs.map((tab, index) => (
                 <div
                   key={index}
-                  ref={(el) => {
+                  ref={el => {
                     tabRefs.current[index] = el;
                   }}
                   className={`rounded-sm px-3 py-2 cursor-pointer transition-colors duration-300 h-[30px] ${
                     index === activeIndex
-                      ? `text-[#0e0e10] dark:text-white ${variant === "secondary" && "bg-orange-200"}`
+                      ? `text-[#0e0e10] dark:text-white ${variant === 'secondary' && 'bg-orange-200'}`
                       : `text-[#0e0f1199] dark:text-[#ffffff99]}`
                   }`}
                   onMouseEnter={() => setHoveredIndex(index)}

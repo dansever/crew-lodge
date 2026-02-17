@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
+import { Calendar } from '@/components/ui/calendar';
+import { Label } from '@/components/ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/stories";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon, RotateCcw } from "lucide-react";
-import { useEffect, useState } from "react";
-import { DateRange } from "react-day-picker";
+} from '@/components/ui/popover';
+import { Button } from '@/stories';
+import { format } from 'date-fns';
+import { Calendar as CalendarIcon, RotateCcw } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { DateRange } from 'react-day-picker';
 
 interface DatePickerSingleProps {
   label?: string;
-  mode: "single";
+  mode: 'single';
   date?: Date;
   defaultDate?: Date;
   onSelect: (date: Date | undefined) => void;
@@ -23,7 +23,7 @@ interface DatePickerSingleProps {
 
 interface DatePickerRangeProps {
   label?: string;
-  mode: "range";
+  mode: 'range';
   dates?: DateRange;
   defaultDate?: DateRange;
   onSelect: (dates: DateRange) => void;
@@ -47,13 +47,13 @@ export function DatePicker(props: DatePickerProps) {
   const { label, mode } = props;
 
   // Extract dates prop based on mode to avoid object reference issues in useEffect
-  const externalDates = mode === "range" ? props.dates : props.date;
+  const externalDates = mode === 'range' ? props.dates : props.date;
 
   // Internal state for the selected date(s)
   const [internalDate, setInternalDate] = useState<
     DateRange | Date | undefined
   >(() => {
-    if (mode === "single") {
+    if (mode === 'single') {
       return props.date || props.defaultDate;
     } else {
       return props.dates || props.defaultDate;
@@ -71,7 +71,7 @@ export function DatePicker(props: DatePickerProps) {
 
   const handleReset = () => {
     // Reset to default date
-    if (mode === "single") {
+    if (mode === 'single') {
       const resetDate = props.defaultDate;
       setInternalDate(resetDate);
       props.onSelect(resetDate);
@@ -84,7 +84,7 @@ export function DatePicker(props: DatePickerProps) {
   };
 
   const handleSelect = (selected: DateRange | Date | undefined) => {
-    if (mode === "single") {
+    if (mode === 'single') {
       const date = selected as Date | undefined;
       setInternalDate(date);
       props.onSelect(date);
@@ -101,25 +101,25 @@ export function DatePicker(props: DatePickerProps) {
 
   // Format button text based on mode and selection
   const getButtonText = () => {
-    if (mode === "single") {
+    if (mode === 'single') {
       const date = internalDate as Date | undefined;
-      return date ? format(date, "LLL dd, y") : "Pick a date";
+      return date ? format(date, 'LLL dd, y') : 'Pick a date';
     } else {
       const dateRange = internalDate as DateRange | undefined;
       if (!dateRange?.from && !dateRange?.to) {
-        return "Pick a date range";
+        return 'Pick a date range';
       }
       const fromText = dateRange?.from
-        ? format(dateRange.from, "LLL dd, y")
-        : "...";
-      const toText = dateRange?.to ? format(dateRange.to, "LLL dd, y") : "...";
+        ? format(dateRange.from, 'LLL dd, y')
+        : '...';
+      const toText = dateRange?.to ? format(dateRange.to, 'LLL dd, y') : '...';
       return `${fromText} - ${toText}`;
     }
   };
 
   // Get the default month to display in calendar
   const getDefaultMonth = () => {
-    if (mode === "single") {
+    if (mode === 'single') {
       return (internalDate as Date) || new Date();
     } else {
       return (internalDate as DateRange)?.from || new Date();
@@ -144,14 +144,14 @@ export function DatePicker(props: DatePickerProps) {
           />
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          {mode === "single" ? (
+          {mode === 'single' ? (
             <Calendar
               autoFocus
               mode="single"
               defaultMonth={getDefaultMonth()}
               showOutsideDays={false}
               selected={internalDate as Date | undefined}
-              onSelect={(date) => handleSelect(date)}
+              onSelect={date => handleSelect(date)}
               numberOfMonths={1}
             />
           ) : (
@@ -161,7 +161,7 @@ export function DatePicker(props: DatePickerProps) {
               defaultMonth={getDefaultMonth()}
               showOutsideDays={false}
               selected={internalDate as DateRange | undefined}
-              onSelect={(range) => handleSelect(range)}
+              onSelect={range => handleSelect(range)}
               numberOfMonths={2}
             />
           )}

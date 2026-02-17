@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
 import {
   PopoverContent,
   PopoverTrigger,
   Popover as ShadcnPopover,
-} from "@/components/ui/popover";
-import { AlertCircle, AlertTriangle, Trash2 } from "lucide-react";
-import * as React from "react";
-import { Button } from "../button/Button";
+} from '@/components/ui/popover';
+import { AlertCircle, AlertTriangle, Trash2 } from 'lucide-react';
+import * as React from 'react';
+import { Button } from '../button/Button';
 
-export type ConfirmationVariant = "danger" | "warning" | "info";
+export type ConfirmationVariant = 'danger' | 'warning' | 'info';
 
 export interface ConfirmationPopoverProps extends Omit<
   React.ComponentProps<typeof ShadcnPopover>,
-  "children" | "open" | "onOpenChange"
+  'children' | 'open' | 'onOpenChange'
 > {
   /** The element that triggers the confirmation popover */
   trigger: React.ReactNode;
@@ -38,9 +38,9 @@ export interface ConfirmationPopoverProps extends Omit<
   /** Callback when open state changes (controlled) */
   onOpenChange?: (open: boolean) => void;
   /** Alignment of the popover relative to trigger */
-  align?: "center" | "start" | "end";
+  align?: 'center' | 'start' | 'end';
   /** Side of the trigger to show the popover */
-  side?: "bottom" | "top" | "right" | "left";
+  side?: 'bottom' | 'top' | 'right' | 'left';
   /** Offset from the trigger */
   sideOffset?: number;
   /** Custom icon to display (overrides variant icon) */
@@ -67,18 +67,18 @@ export interface ConfirmationPopoverProps extends Omit<
  */
 export function ConfirmationPopover({
   trigger,
-  title = "Are you sure?",
+  title = 'Are you sure?',
   description,
-  variant = "danger",
-  confirmText = "Confirm",
-  cancelText = "Cancel",
+  variant = 'danger',
+  confirmText = 'Confirm',
+  cancelText = 'Cancel',
   onConfirm,
   onCancel,
   isLoading = false,
   open,
   onOpenChange,
-  align = "center",
-  side = "top",
+  align = 'center',
+  side = 'top',
   sideOffset = 8,
   icon,
   contentClassName,
@@ -95,7 +95,7 @@ export function ConfirmationPopover({
       }
       onOpenChange?.(newOpen);
     },
-    [isControlled, onOpenChange],
+    [isControlled, onOpenChange]
   );
 
   const handleConfirm = React.useCallback(async () => {
@@ -105,7 +105,7 @@ export function ConfirmationPopover({
     } catch (error) {
       // Error handling is up to the parent component
       // We don't close the popover on error so user can retry
-      console.error("Confirmation action failed:", error);
+      console.error('Confirmation action failed:', error);
     }
   }, [onConfirm, handleOpenChange]);
 
@@ -118,11 +118,11 @@ export function ConfirmationPopover({
   const getIcon = () => {
     if (icon) return icon;
     switch (variant) {
-      case "danger":
+      case 'danger':
         return <Trash2 className="h-5 w-5 text-red-600" />;
-      case "warning":
+      case 'warning':
         return <AlertTriangle className="h-5 w-5 text-orange-600" />;
-      case "info":
+      case 'info':
         return <AlertCircle className="h-5 w-5 text-blue-600" />;
       default:
         return <AlertCircle className="h-5 w-5 text-neutral-600" />;
@@ -130,16 +130,16 @@ export function ConfirmationPopover({
   };
 
   // Get confirm button variant based on confirmation variant
-  const getConfirmVariant = (): "danger" | "warning" | "primary" => {
+  const getConfirmVariant = (): 'danger' | 'warning' | 'primary' => {
     switch (variant) {
-      case "danger":
-        return "danger";
-      case "warning":
-        return "warning";
-      case "info":
-        return "primary";
+      case 'danger':
+        return 'danger';
+      case 'warning':
+        return 'warning';
+      case 'info':
+        return 'primary';
       default:
-        return "primary";
+        return 'primary';
     }
   };
 
@@ -150,7 +150,7 @@ export function ConfirmationPopover({
         align={align}
         side={side}
         sideOffset={sideOffset}
-        className={`w-80 shadow-none ${contentClassName || ""}`}
+        className={`w-80 shadow-none ${contentClassName || ''}`}
       >
         <div className="space-y-4">
           {/* Header with icon and title */}

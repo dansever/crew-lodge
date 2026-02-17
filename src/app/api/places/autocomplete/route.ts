@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     if (!input) {
       return NextResponse.json(
         { error: 'Missing required query parameter: input' },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -27,7 +27,10 @@ export async function GET(request: NextRequest) {
 
     const includedRegionCodesParam = searchParams.get('includedRegionCodes');
     const includedRegionCodes = includedRegionCodesParam
-      ? includedRegionCodesParam.split(',').map(s => s.trim()).filter(Boolean)
+      ? includedRegionCodesParam
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean)
       : undefined;
 
     const suggestions = await fetchPlaceAutocomplete(input, {
@@ -39,10 +42,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ suggestions });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Autocomplete request failed';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 },
-    );
+    const message =
+      err instanceof Error ? err.message : 'Autocomplete request failed';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

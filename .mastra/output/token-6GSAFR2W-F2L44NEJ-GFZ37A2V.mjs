@@ -48,7 +48,10 @@ import './tools.mjs';
 
 // ../agent-builder/dist/token-6GSAFR2W-F2L44NEJ.js
 var require_token = __commonJS({
-  "../../../node_modules/.pnpm/@vercel+oidc@3.0.5/node_modules/@vercel/oidc/dist/token.js"(exports$1, module) {
+  '../../../node_modules/.pnpm/@vercel+oidc@3.0.5/node_modules/@vercel/oidc/dist/token.js'(
+    exports$1,
+    module
+  ) {
     var __defProp = Object.defineProperty;
     var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -58,17 +61,22 @@ var require_token = __commonJS({
         __defProp(target, name, { get: all[name], enumerable: true });
     };
     var __copyProps = (to, from, except, desc) => {
-      if (from && typeof from === "object" || typeof from === "function") {
+      if ((from && typeof from === 'object') || typeof from === 'function') {
         for (let key of __getOwnPropNames(from))
           if (!__hasOwnProp.call(to, key) && key !== except)
-            __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+            __defProp(to, key, {
+              get: () => from[key],
+              enumerable:
+                !(desc = __getOwnPropDesc(from, key)) || desc.enumerable,
+            });
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+    var __toCommonJS = mod =>
+      __copyProps(__defProp({}, '__esModule', { value: true }), mod);
     var token_exports = {};
     __export(token_exports, {
-      refreshToken: () => refreshToken
+      refreshToken: () => refreshToken,
     });
     module.exports = __toCommonJS(token_exports);
     var import_token_error = require_token_error();
@@ -76,28 +84,39 @@ var require_token = __commonJS({
     async function refreshToken() {
       const { projectId, teamId } = (0, import_token_util.findProjectInfo)();
       let maybeToken = (0, import_token_util.loadToken)(projectId);
-      if (!maybeToken || (0, import_token_util.isExpired)((0, import_token_util.getTokenPayload)(maybeToken.token))) {
+      if (
+        !maybeToken ||
+        (0, import_token_util.isExpired)(
+          (0, import_token_util.getTokenPayload)(maybeToken.token)
+        )
+      ) {
         const authToken = (0, import_token_util.getVercelCliToken)();
         if (!authToken) {
           throw new import_token_error.VercelOidcTokenError(
-            "Failed to refresh OIDC token: login to vercel cli"
+            'Failed to refresh OIDC token: login to vercel cli'
           );
         }
         if (!projectId) {
           throw new import_token_error.VercelOidcTokenError(
-            "Failed to refresh OIDC token: project id not found"
+            'Failed to refresh OIDC token: project id not found'
           );
         }
-        maybeToken = await (0, import_token_util.getVercelOidcToken)(authToken, projectId, teamId);
+        maybeToken = await (0, import_token_util.getVercelOidcToken)(
+          authToken,
+          projectId,
+          teamId
+        );
         if (!maybeToken) {
-          throw new import_token_error.VercelOidcTokenError("Failed to refresh OIDC token");
+          throw new import_token_error.VercelOidcTokenError(
+            'Failed to refresh OIDC token'
+          );
         }
         (0, import_token_util.saveToken)(maybeToken, projectId);
       }
       process.env.VERCEL_OIDC_TOKEN = maybeToken.token;
       return;
     }
-  }
+  },
 });
 var token6GSAFR2W = require_token();
 

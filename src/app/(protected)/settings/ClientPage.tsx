@@ -1,5 +1,5 @@
-import { PageLayout } from "@/stories";
-import { AppHeader } from "../_components/AppHeader";
+import { PageLayout } from '@/stories';
+import { AppHeader } from '../_components/AppHeader';
 
 export default function SettingsClientPage() {
   return (

@@ -4,12 +4,12 @@ import { api } from '@/convex/_generated/api';
 import type { Market, MarketId } from '@/convex/types';
 import { useConvexAuth, useQuery } from 'convex/react';
 import {
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
 } from 'react';
 
 interface MarketContextValue {

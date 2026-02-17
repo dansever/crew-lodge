@@ -1,4 +1,4 @@
-import SettingsClientPage from "./ClientPage";
+import SettingsClientPage from './ClientPage';
 
 export default function SettingsPage() {
   return <SettingsClientPage />;

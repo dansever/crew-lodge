@@ -86,7 +86,7 @@ const PLACES_BASE = 'https://places.googleapis.com/v1/places';
  */
 export async function getPlaceDetails(
   placeId: string,
-  options: GetPlaceDetailsOptions = {},
+  options: GetPlaceDetailsOptions = {}
 ): Promise<PlaceDetails> {
   const trimmed = placeId.trim();
   if (!trimmed) {
@@ -116,9 +116,7 @@ export async function getPlaceDetails(
 
   if (!response.ok) {
     const errBody = await response.text();
-    throw new Error(
-      `Place Details API error ${response.status}: ${errBody}`,
-    );
+    throw new Error(`Place Details API error ${response.status}: ${errBody}`);
   }
 
   const data = (await response.json()) as PlaceDetails;
