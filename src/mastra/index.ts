@@ -7,6 +7,7 @@ import {
   Observability,
   SensitiveDataFilter,
 } from '@mastra/observability';
+import { crewLodgeAssistantAgent } from './agents/crew-lodge-assistant';
 import { getHotelInfoAgent } from './agents/hotel-info-agent';
 import { parseDisruptionAgent } from './agents/parse-disruption-agent';
 import { weatherAgent } from './agents/weather-agent';
@@ -18,6 +19,7 @@ export const mastra = new Mastra({
     weatherAgent,
     getHotelInfoAgent,
     parseDisruptionAgent,
+    crewLodgeAssistantAgent,
   },
   storage: new LibSQLStore({
     id: 'mastra-storage',

@@ -4,15 +4,16 @@ import { api } from '@/convex/_generated/api';
 import type { Market, MarketId } from '@/convex/types';
 import { useConvexAuth, useQuery } from 'convex/react';
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
 } from 'react';
 
 interface MarketContextValue {
-  currentMarket: Market | null | undefined;
+  currentMarket: Market | null;
   setCurrentMarketId: (marketId: MarketId | null) => void;
   markets: Market[] | undefined;
 }
@@ -65,9 +66,23 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
     return markets.find((m: Market) => m._id === currentMarketId) ?? null;
   }, [markets, currentMarketId]);
 
+  // Auto-select first market if none is selected
+  useEffect(() => {
+    if (markets && markets.length > 0 && !currentMarketId) {
+      setCurrentMarketId(markets[0]._id);
+    }
+  }, [markets, currentMarketId, setCurrentMarketId]);
+
+  // Handle stale market ID (if stored market was deleted)
+  useEffect(() => {
+    if (markets && currentMarketId && !currentMarket && markets.length > 0) {
+      setCurrentMarketId(markets[0]._id);
+    }
+  }, [markets, currentMarketId, currentMarket, setCurrentMarketId]);
+
   const value = useMemo<MarketContextValue>(
     () => ({
-      currentMarket: currentMarket ?? undefined,
+      currentMarket,
       setCurrentMarketId,
       markets,
     }),

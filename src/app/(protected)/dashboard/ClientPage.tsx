@@ -69,7 +69,7 @@ export default function DashboardClientPage() {
   ];
 
   return (
-    <PageLayout header={<AppHeader />}>
+    <PageLayout header={<AppHeader/>}>
       <div className="space-y-8">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">

@@ -11,6 +11,13 @@ import { useQuery } from 'convex/react';
 import { CheckCircle2, ChevronDown, MapPin, Plane, Plus } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+// Helper function to format airport count labels
+function getAirportLabel(count: number): string {
+  if (count === 0) return '0 airports';
+  if (count === 1) return '1 airport';
+  return `${count} airports`;
+}
+
 export default function MarketSelector({
   markets: marketsProp,
 }: {
@@ -40,7 +47,7 @@ export default function MarketSelector({
     };
   }, [searchInput]);
 
-  const isLoading = markets === undefined;
+  const isLoading = markets === undefined || airports === undefined;
   const marketCount = markets?.length ?? 0;
 
   // Count airports per market
@@ -73,17 +80,25 @@ export default function MarketSelector({
     return filtered;
   }, [markets, searchQuery]);
 
+  const handleOpenChange = useCallback((open: boolean) => {
+    setOpen(open);
+    // Clear search when closing
+    if (!open) {
+      setSearchInput('');
+      setSearchQuery('');
+    }
+  }, []);
+
   const handleMarketSelect = useCallback(
     (marketId: MarketId) => {
       setCurrentMarketId(marketId);
       setOpen(false);
+      // Clear search after selection
+      setSearchInput('');
+      setSearchQuery('');
     },
     [setCurrentMarketId]
   );
-
-  const handleOpenChange = useCallback((open: boolean) => {
-    setOpen(open);
-  }, []);
 
   const handleTriggerClick = useCallback(() => {
     setOpen(true);
@@ -95,6 +110,18 @@ export default function MarketSelector({
     },
     []
   );
+
+  // Keyboard shortcut: Cmd/Ctrl + K to open market selector
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <Sheet
@@ -111,6 +138,7 @@ export default function MarketSelector({
           airportCountByMarketId={airportCountByMarketId}
           isLoading={isLoading}
           onClick={handleTriggerClick}
+          searchQuery={searchQuery}
         />
       }
     >
@@ -131,6 +159,7 @@ export default function MarketSelector({
         isLoading={isLoading}
         onMarketSelect={handleMarketSelect}
         currentMarket={currentMarket}
+        searchQuery={searchQuery}
       />
     </Sheet>
   );
@@ -142,6 +171,7 @@ interface MarketSelectorTriggerProps {
   airportCountByMarketId: Map<string, number>;
   isLoading: boolean;
   onClick: () => void;
+  searchQuery: string;
 }
 
 function MarketSelectorTrigger({
@@ -150,6 +180,7 @@ function MarketSelectorTrigger({
   airportCountByMarketId,
   isLoading,
   onClick,
+  searchQuery,
 }: MarketSelectorTriggerProps) {
   const airportCount =
     currentMarket?._id != null
@@ -160,6 +191,8 @@ function MarketSelectorTrigger({
     return (
       <button
         onClick={onClick}
+        aria-label="Select market"
+        aria-haspopup="dialog"
         className="group px-3 py-1.5 relative overflow-hidden rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-700/40 transition-all duration-200 hover:border-slate-300/80 dark:hover:border-slate-600/60 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:shadow-sm w-full text-left"
       >
         <div className="flex items-center gap-3">
@@ -178,16 +211,13 @@ function MarketSelectorTrigger({
 
   if (currentMarket) {
     const location = currentMarket.country ?? 'No location';
-    const airportLabel =
-      airportCount === 0
-        ? '0 airports'
-        : airportCount === 1
-          ? '1 airport'
-          : `${airportCount} airports`;
+    const airportLabel = getAirportLabel(airportCount);
 
     return (
       <button
         onClick={onClick}
+        aria-label={`Current market: ${currentMarket.name}, ${airportLabel}`}
+        aria-haspopup="dialog"
         className="group px-3 py-1.5 relative overflow-hidden rounded-xl dark:bg-slate-800/40 transition-all duration-200 hover:border-slate-300/80 dark:hover:border-slate-600/60 hover:bg-slate-100 dark:hover:bg-slate-800/60 w-full text-left"
       >
         <div className="flex items-center gap-3">
@@ -211,6 +241,8 @@ function MarketSelectorTrigger({
   return (
     <button
       onClick={onClick}
+      aria-label={`Select a market. ${marketCount} markets available`}
+      aria-haspopup="dialog"
       className="group px-3 py-1.5 relative overflow-hidden rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-700/50 transition-all duration-200 hover:border-slate-300/80 dark:hover:border-slate-600/60 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:shadow-sm w-full text-left"
     >
       <div className="flex items-center gap-3">
@@ -241,6 +273,7 @@ interface MarketsListProps {
   isLoading: boolean;
   onMarketSelect: (marketId: MarketId) => void;
   currentMarket: Market | null | undefined;
+  searchQuery: string;
 }
 
 function MarketsList({
@@ -249,6 +282,7 @@ function MarketsList({
   isLoading,
   onMarketSelect,
   currentMarket,
+  searchQuery,
 }: MarketsListProps) {
   if (isLoading) {
     return (
@@ -276,9 +310,14 @@ function MarketsList({
         <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">
           No markets found
         </h3>
-        <p className="text-slate-600 dark:text-slate-400 text-sm">
-          Try a different search or add markets to your organization
+        <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">
+          {searchQuery
+            ? 'Try a different search term'
+            : 'Get started by adding your first market'}
         </p>
+        {!searchQuery && (
+          <AddMarketSheet trigger={<Button icon={Plus} text="Add Market" />} />
+        )}
       </div>
     );
   }
@@ -362,11 +401,7 @@ function MarketCard({
             variant="secondary"
             className="shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-200"
           >
-            {airportCount === 0
-              ? '0 airports'
-              : airportCount === 1
-                ? '1 airport'
-                : `${airportCount} airports`}
+            {getAirportLabel(airportCount)}
           </Badge>
         </div>
       </div>

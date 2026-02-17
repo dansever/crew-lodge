@@ -21,6 +21,9 @@ export const serverEnv = createEnv({
     // Clerk server
     CLERK_SECRET_KEY: z.string().min(1).startsWith('sk_'),
 
+    // Mastra
+    MASTRA_API_KEY: z.string().min(1),
+
     // OpenAI
     OPENAI_API_KEY: z.string().min(1).startsWith('sk-'),
     OPENAI_MODEL: z.string().min(1),
